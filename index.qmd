@@ -17,7 +17,5 @@ execute:
   echo: false
 jupyter: python3
 ---
-
 ## Abstract
-
-Add project abstract here.
+Short-term volatility in equity markets presents both risk and opportunity for traders and investors. This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities.
