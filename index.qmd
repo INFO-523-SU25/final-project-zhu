@@ -1,8 +1,8 @@
 ---
-title: "Project Title"
+title: "Forecasting Anomalies in AtHub’s Stock Behavior"
 subtitle: "INFO 523 - Final Project"
 author: 
-  - name: "Team name - Team member 1, Team member 2,..."
+  - name: "Team A - Team member Annabelle Zhu"
     affiliations:
       - name: "College of Information Science, University of Arizona"
 description: "Project description"
@@ -17,5 +17,8 @@ execute:
   echo: false
 jupyter: python3
 ---
-## Abstract
-Short-term volatility in equity markets presents both risk and opportunity for traders and investors. This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities.
+# Abstract
+This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities.
+
+# Introduction
+Predicting sudden shifts in equity price or trading volume is a long-standing challenge in financial forecasting, particularly for high-volatility stocks sensitive to external shocks. This project centers on AtHub (603881.SH), a stock known for its erratic short-term behavior and policy-driven sensitivity, to assess whether machine learning models can detect early signs of abnormal market activity. Unlike traditional models that aim to forecast precise price levels, our approach reframes the task as a binary classification problem focused on identifying rare but impactful events. We rely exclusively on market-based features—technical indicators derived from historical prices and volumes—to build a predictive framework that aligns with real-world constraints where external signals (e.g., news sentiment, fundamentals) may be unavailable or delayed. By integrating explainable AI methods into the model workflow, this project also emphasizes transparency and trustworthiness in financial ML applications.
