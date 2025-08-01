@@ -3,7 +3,7 @@ project:
   type: website
 
 website:
-  title: Project Title
+  title: "Forecasting Anomalies in AtHub’s Stock Behavior"
   navbar:
     right:
       - icon: github

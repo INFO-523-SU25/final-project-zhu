@@ -48,15 +48,11 @@ df = pd.read_csv("data/stock_cleaned.csv")
 df.head()
 ```
 
-
-
 ## Dataset info
 
 ```{python}
 f"Dataset contains {df.shape[0]} rows and {df.shape[1]} columns."
 ```
-
-
 
 ```{python}
 df.info()
@@ -88,9 +84,6 @@ ax2.set_title('Daily Returns Distribution (±5% Threshold)')
 plt.tight_layout()
 plt.show()
 ```
-
-
-
 
 # Dataset Summary
 
