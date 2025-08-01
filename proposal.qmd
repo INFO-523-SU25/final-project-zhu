@@ -16,6 +16,7 @@ editor: visual
 code-annotations: hover
 execute:
   warning: false
+  echo: false
 jupyter: python3
 ---
 
@@ -38,7 +39,7 @@ import numpy as np
 import pandas as pd
 ```
 
-## Dataset
+# Dataset
 
 ```{python}
 #| label: load-dataset
@@ -47,28 +48,51 @@ df = pd.read_csv("data/stock_cleaned.csv")
 df.head()
 ```
 
+
+
+## Dataset info
+
 ```{python}
 f"Dataset contains {df.shape[0]} rows and {df.shape[1]} columns."
 ```
+
+
 
 ```{python}
 df.info()
 
 ```
 
-### **Motivation & Goals**
+## Target `Anomalies`
 
-**Why AtHub (603881.SH)?** AtHub is a leading Chinese data center infrastructure provider whose stock exhibits unusually high short-term volatility, making it a strong candidate for anomaly-based forecasting. Over the past six months, its daily return volatility (σ ≈ 35%) has far exceeded the industry average (≈ 22%). Moreover, its price reacts sharply to regulatory announcements and policy shifts, reflecting its sensitivity to macro-level and sector-specific events.
+```{python}
+#| label: target-visualization
+#| fig-cap: "Distribution of Anomaly Labels (Target Variable)"
+#| message: false
+import matplotlib.pyplot as plt
 
-This project aims to detect and forecast short-term abnormal volatility events in AtHub’s stock using supervised machine learning. Instead of heuristic rules, we define volatility anomalies using **quantifiable thresholds**: price changes beyond ±5% or trading volumes exceeding 2× the 30-day average. Our key goals are:
+# Calculate anomaly days
+df['anomaly'] = ((df['pct_chg'].abs() >= 5) | 
+                (df['vol'] > 2 * df['vol'].rolling(30).mean())).astype(int)
 
--   **Build an interpretable prediction model** using over 30 engineered technical indicators (e.g., MACD, RSI, OBV, ATR).
--   **Evaluate event-driven prediction performance** using time-series-aware cross-validation and dynamic thresholding strategies.
--   **Provide real-world utility** in the form of a probabilistic alert system for volatility-prone trading days.
+# Plot
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+df['anomaly'].value_counts().plot(kind='pie', autopct='%1.1f%%', 
+                                 colors=['#66b3ff','#ff9999'], ax=ax1)
+ax1.set_title('Anomaly Class Distribution')
 
-SHAP analysis is integrated to uncover feature interactions that precede volatility (e.g., “high RSI + declining OBV” may precede reversals), offering not just predictive power but also interpretability.
+df['pct_chg'].plot(kind='hist', bins=50, color='#66b3ff', ax=ax2)
+ax2.axvline(x=5, color='red', linestyle='--')
+ax2.axvline(x=-5, color='red', linestyle='--')
+ax2.set_title('Daily Returns Distribution (±5% Threshold)')
+plt.tight_layout()
+plt.show()
+```
 
-### **Dataset Summary**
+
+
+
+# Dataset Summary
 
 The dataset is sourced via the **Tushare API** and engineered using Python’s `tsta` technical indicator library. It includes:
 
@@ -83,7 +107,19 @@ The dataset is sourced via the **Tushare API** and engineered using Python’s `
 
 This feature-rich time series provides a robust foundation for testing anomaly detection models under realistic, noisy conditions.
 
-## Questions
+# Motivation & Goals
+
+**Why AtHub (603881.SH)?** AtHub is a leading Chinese data center infrastructure provider whose stock exhibits unusually high short-term volatility, making it a strong candidate for anomaly-based forecasting. Over the past six months, its daily return volatility (σ ≈ 35%) has far exceeded the industry average (≈ 22%). Moreover, its price reacts sharply to regulatory announcements and policy shifts, reflecting its sensitivity to macro-level and sector-specific events.
+
+This project aims to detect and forecast short-term abnormal volatility events in AtHub’s stock using supervised machine learning. Instead of heuristic rules, we define volatility anomalies using **quantifiable thresholds**: price changes beyond ±5% or trading volumes exceeding 2× the 30-day average. Our key goals are:
+
+-   **Build an interpretable prediction model** using over 30 engineered technical indicators (e.g., MACD, RSI, OBV, ATR).
+-   **Evaluate event-driven prediction performance** using time-series-aware cross-validation and dynamic thresholding strategies.
+-   **Provide real-world utility** in the form of a probabilistic alert system for volatility-prone trading days.
+
+SHAP analysis is integrated to uncover feature interactions that precede volatility (e.g., “high RSI + declining OBV” may precede reversals), offering not just predictive power but also interpretability.
+
+# Questions
 
 -   Q1. Can TA features detect anomalies 1–3 days in advance? Which indicators lead?
 
@@ -91,11 +127,11 @@ This feature-rich time series provides a robust foundation for testing anomaly d
 
 -   Q3. How do anomaly thresholds (±3% vs. ±5% vs. ±7% price; 1.8x vs. 2.5x volume) impact model performance?
 
-## Analysis plan
+# Analysis plan
 
 Here's a refined **weekly plan** in bullet-point format that incorporates EDA before feature engineering, aligns with your research questions, and includes all required deliverables (write-up, presentation, website). Tools are listed separately for clarity:
 
-### **Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)**
+## **Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)**
 
 #### **Week 1: Data Collection & Exploratory Analysis (EDA)**
 
@@ -144,3 +180,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
         -   Logical structure (e.g., `data/`, `notebooks/`, `results/`).
         -   Clear `index.qmd` as entry point.
 -   **Tools**: Quarto, `plotly`, `pkgdown`
+
+# Reference
+
+林竑皓, 唐海清, 王奕红, & 缪欣君. (2024年12月18日). 数据港（603881）：国有数据中心龙头，整体经营稳步向上 \[公司研究报告\]. 天风证券. https://www.tfzq.com
