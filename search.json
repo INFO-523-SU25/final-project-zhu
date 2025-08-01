@@ -1,0 +1,135 @@
+[
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "",
+    "text": "This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.\nWe aim to construct a binary classifier that leverages over 30 technical analysis (TA) indicators across momentum, volume, trend, and volatility domains. These features are engineered using the Tushare API and the tsta library, covering 218 trading days of AtHub data. The project will incorporate time-aware cross-validation to avoid look-ahead bias and SHAP analysis for post-hoc interpretability. Ensemble models like LightGBM and XGBoost will serve as the backbone of the predictive framework, selected for their robustness in handling noisy, nonlinear tabular data. The final outcome will include an interactive visualization of feature contributions, along with a brief report and presentation.\nThis proposal reflects a practical and scalable approach to market anomaly detection, especially relevant for traders and risk managers seeking data-driven early warning systems."
+  },
+  {
+    "objectID": "proposal.html#dataset-info",
+    "href": "proposal.html#dataset-info",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Dataset info",
+    "text": "Dataset info\n\n\n'Dataset contains 375 rows and 32 columns.'\n\n\n\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 375 entries, 0 to 374\nData columns (total 32 columns):\n #   Column             Non-Null Count  Dtype  \n---  ------             --------------  -----  \n 0   Unnamed: 0         375 non-null    int64  \n 1   ts_code            375 non-null    object \n 2   open               375 non-null    float64\n 3   high               375 non-null    float64\n 4   low                375 non-null    float64\n 5   close              375 non-null    float64\n 6   pct_chg            375 non-null    float64\n 7   vol                375 non-null    float64\n 8   amount             375 non-null    float64\n 9   volume_obv         375 non-null    float64\n 10  volume_cmf         375 non-null    float64\n 11  volume_vpt         375 non-null    float64\n 12  volume_vwap        375 non-null    float64\n 13  volume_mfi         375 non-null    float64\n 14  volatility_bbw     375 non-null    float64\n 15  volatility_atr     375 non-null    float64\n 16  volatility_ui      375 non-null    float64\n 17  trend_macd         375 non-null    float64\n 18  trend_macd_signal  375 non-null    float64\n 19  trend_macd_diff    375 non-null    float64\n 20  trend_adx          375 non-null    float64\n 21  trend_adx_pos      375 non-null    float64\n 22  trend_adx_neg      375 non-null    float64\n 23  momentum_rsi       375 non-null    float64\n 24  momentum_wr        375 non-null    float64\n 25  momentum_roc       375 non-null    float64\n 26  momentum_ao        375 non-null    float64\n 27  momentum_ppo_hist  375 non-null    float64\n 28  trend_cci          375 non-null    float64\n 29  trend_aroon_up     375 non-null    float64\n 30  trend_aroon_down   375 non-null    float64\n 31  trend_aroon_ind    375 non-null    float64\ndtypes: float64(30), int64(1), object(1)\nmemory usage: 93.9+ KB"
+  },
+  {
+    "objectID": "proposal.html#target-anomalies",
+    "href": "proposal.html#target-anomalies",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Target Anomalies",
+    "text": "Target Anomalies\n\n\n\n\n\nDistribution of Anomaly Labels (Target Variable)"
+  },
+  {
+    "objectID": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
+    "href": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)",
+    "text": "Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)\n\nWeek 1: Data Collection & Exploratory Analysis (EDA)\n\nTasks:\n\nCollect 1+ year of OHLCV data for AtHub using Tushare API.\nGenerate TA features (momentum, volume, volatility, trend indicators).\nPerform EDA:\n\nVisualize price/volume trends and anomaly frequency.\nCheck for missing data, outliers, and stationarity.\nAnalyze correlation between raw price/volume metrics.\n\nDefine preliminary anomaly thresholds (±5% returns, 2× volume).\n\nTools: tushare, pandas, matplotlib, ta, seaborn.\n\n\n\nWeek 2: Feature Engineering & Baseline Model\n\nTasks:\n\nRefine anomaly labels based on EDA insights.\nSplit data chronologically (e.g., 80% train, 20% test).\nTrain baseline models (XGBoost/LightGBM) and evaluate with accuracy/F1.\n\nResearch Questions Addressed:\n\nQ3 (Threshold Impact): Test initial thresholds.\n\nTools: scikit-learn, xgboost.\n\n\n\nWeek 3: Model Tuning & Interpretability\n\nTasks:\n\nOptimize hyperparameters using time-series cross-validation.\nCompare performance across thresholds (±3%, ±5%, ±7%).\nApply SHAP to identify top predictive features and patterns.\nTest feature lead times (1–3 days pre-anomaly).\n\nResearch Questions Addressed:\n\nQ1 (Predictive Horizon): Lag feature analysis.\nQ2 (Feature Importance): SHAP/partial dependence plots.\n\nTools: optuna, shap, statsmodels (Granger causality).\n\n\n\nWeek 4: Final Evaluation & Deliverables\n\nTasks:\n\nWrite-up (1,000–2,000 words):\n\nIntroduction, Methods, Results (SHAP plots, threshold analysis), Conclusion.\n\nPresentation (5 mins):\n\nQuarto slides covering motivation, methods, key findings, Q&A prep.\n\nWebsite:\n\nHost report, code, and interactive visualizations (e.g., Plotly dashboards).\n\nRepo Organization:\n\nLogical structure (e.g., data/, notebooks/, results/).\nClear index.qmd as entry point.\n\n\nTools: Quarto, plotly, pkgdown"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "",
+    "text": "This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities."
+  },
+  {
+    "objectID": "index.html#feature-engineering-details",
+    "href": "index.html#feature-engineering-details",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Feature Engineering Details",
+    "text": "Feature Engineering Details\n\nTechnical Indicators Generated\nWe engineer 30+ TA features across 4 key dimensions:\n\n1. Momentum Indicators\n\nRSI (14-day): Identifies overbought (&gt;70) and oversold (&lt;30) conditions\nMACD (12,26,9): Captures trend direction and momentum shifts\nWilliams %R (14-day): Measures closing prices relative to recent highs/lows\n\n\n\n\n2. Volume Indicators\n\nOBV (On-Balance Volume): Cumulative volume flow predictor\nVolume MFI (14-day): Money Flow Index combining price/volume\nVPT (Volume Price Trend): Similar to OBV but more sensitive\n\n\n\n3. Volatility Indicators\n\nATR (14-day): Average True Range for volatility measurement\nBollinger Band Width: Normalized volatility metric\nUlcer Index: Drawdown-based risk measure\n\n\n\n4. Trend Indicators\n\nADX (14-day): Trend strength quantifier\nAroon Oscillator: Identifies trend changes\nCCI (20-day): Cyclical trend detector\n\n\n\n\n\n\nCorrelation Heatmap of Selected Features"
+  },
+  {
+    "objectID": "index.html#data-splitting-strategy",
+    "href": "index.html#data-splitting-strategy",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Data Splitting Strategy",
+    "text": "Data Splitting Strategy\nGiven the time-series nature of stock data, we implement: - Chronological split: First 80% for training, last 20% for testing - Walk-forward validation: Expanding window cross-validation"
+  },
+  {
+    "objectID": "index.html#evaluation-metrics",
+    "href": "index.html#evaluation-metrics",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Evaluation Metrics",
+    "text": "Evaluation Metrics\nWe prioritize: - Recall: Minimizing false negatives (missed anomalies) - F1-score: Balancing precision/recall - Matthews Correlation Coefficient: Robust to class imbalance"
+  },
+  {
+    "objectID": "index.html#baseline-models",
+    "href": "index.html#baseline-models",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Baseline Models",
+    "text": "Baseline Models\n\n\n\n\n\n\n\n\nModel\nStrengths\nWeaknesses\n\n\n\n\nXGBoost\nHandles nonlinear relationships\nRequires careful tuning\n\n\nLightGBM\nEfficient with large features\nSensitive to outliers\n\n\nLogistic Regression\nInterpretable coefficients\nLimited nonlinear capacity"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This project was developed by [Team Name] For INFO 523 - Data Mining and Discovery at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nTeam member 1: One sentence description of Team member 1 (e.g., year, major, etc.).\nTeam member 2: One sentence description of Team member 2 (e.g., year, major, etc.).\nTeam member 3: One sentence description of Team member 3 (e.g., year, major, etc.).\nTeam member 4: One sentence description of Team member 4 (e.g., year, major, etc.)."
+  },
+  {
+    "objectID": "presentation.html#quarto",
+    "href": "presentation.html#quarto",
+    "title": "Project title",
+    "section": "Quarto",
+    "text": "Quarto\n\nThe presentation is created using the Quarto CLI\n## sets the start of a new slide"
+  },
+  {
+    "objectID": "presentation.html#layouts",
+    "href": "presentation.html#layouts",
+    "title": "Project title",
+    "section": "Layouts",
+    "text": "Layouts\nYou can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\nlike\nthis\n\nAnd add footnotes"
+  },
+  {
+    "objectID": "presentation.html#code",
+    "href": "presentation.html#code",
+    "title": "Project title",
+    "section": "Code",
+    "text": "Code\n\n\n                            OLS Regression Results                            \n==============================================================================\nDep. Variable:                    mpg   R-squared:                       0.073\nModel:                            OLS   Adj. R-squared:                  0.070\nMethod:                 Least Squares   F-statistic:                     30.59\nDate:                Sun, 27 Jul 2025   Prob (F-statistic):           5.84e-08\nTime:                        17:12:58   Log-Likelihood:                -1346.4\nNo. Observations:                 392   AIC:                             2697.\nDf Residuals:                     390   BIC:                             2705.\nDf Model:                           1                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst         35.8015      2.266     15.800      0.000      31.347      40.257\nspeed       -354.7055     64.129     -5.531      0.000    -480.788    -228.623\n==============================================================================\nOmnibus:                       27.687   Durbin-Watson:                   0.589\nProb(Omnibus):                  0.000   Jarque-Bera (JB):               18.976\nSkew:                           0.420   Prob(JB):                     7.57e-05\nKurtosis:                       2.323   Cond. No.                         169.\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified."
+  },
+  {
+    "objectID": "presentation.html#plots",
+    "href": "presentation.html#plots",
+    "title": "Project title",
+    "section": "Plots",
+    "text": "Plots"
+  },
+  {
+    "objectID": "presentation.html#plot-and-text",
+    "href": "presentation.html#plot-and-text",
+    "title": "Project title",
+    "section": "Plot and text",
+    "text": "Plot and text\n\n\n\nSome text\ngoes here"
+  },
+  {
+    "objectID": "presentation.html#tables",
+    "href": "presentation.html#tables",
+    "title": "Project title",
+    "section": "Tables",
+    "text": "Tables\nIf you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,\n\n\n\n\n\n\n\n\n\n\n\n\nspecies\n\n\n\nisland\n\n\n\nbill_length_mm\n\n\n\nbill_depth_mm\n\n\n\nflipper_length_mm\n\n\n\nbody_mass_g\n\n\n\nsex\n\n\n\n\n\n\n\n\n\n\n\n0\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.1\n\n\n\n18.7\n\n\n\n181.0\n\n\n\n3750.0\n\n\n\nMale\n\n\n\n\n\n\n\n1\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.5\n\n\n\n17.4\n\n\n\n186.0\n\n\n\n3800.0\n\n\n\nFemale\n\n\n\n\n\n\n\n2\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n40.3\n\n\n\n18.0\n\n\n\n195.0\n\n\n\n3250.0\n\n\n\nFemale\n\n\n\n\n\n\n\n4\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n36.7\n\n\n\n19.3\n\n\n\n193.0\n\n\n\n3450.0\n\n\n\nFemale\n\n\n\n\n\n\n\n5\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.3\n\n\n\n20.6\n\n\n\n190.0\n\n\n\n3650.0\n\n\n\nMale"
+  },
+  {
+    "objectID": "presentation.html#images",
+    "href": "presentation.html#images",
+    "title": "Project title",
+    "section": "Images",
+    "text": "Images\n\nImage credit: Danielle Navarro, Percolate."
+  },
+  {
+    "objectID": "presentation.html#math-expressions",
+    "href": "presentation.html#math-expressions",
+    "title": "Project title",
+    "section": "Math Expressions",
+    "text": "Math Expressions\nYou can write LaTeX math expressions inside a pair of dollar signs, e.g. $\\alpha+\\beta$ renders \\(\\alpha + \\beta\\). You can use the display style with double dollar signs:\n$$\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i$$\n\\[\n\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i\n\\]\nLimitations:\n\nThe source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting $$ must appear in the very beginning of a line, followed immediately by a non-space character, and the ending $$ must be at the end of a line, led by a non-space character;\nThere should not be spaces after the opening $ or before the closing $."
+  },
+  {
+    "objectID": "presentation.html#feeling-adventurous",
+    "href": "presentation.html#feeling-adventurous",
+    "title": "Project title",
+    "section": "Feeling adventurous?",
+    "text": "Feeling adventurous?\n\nYou are welcomed to use the default styling of the slides. In fact, that’s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.\nBut some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs."
+  }
+]
