@@ -1,3 +1,4 @@
+ # Need to change to your project repo
 project:
   type: website
 
@@ -6,8 +7,7 @@ website:
   navbar:
     right:
       - icon: github
-        href: https://github.com/INFO-523-SU24/final-project # Need to change to your project repo
-    left:
+        href: https://github.com/INFO-523-SU25/final-project-zhu
       - text: Project
         href: index.qmd
       - text: Proposal

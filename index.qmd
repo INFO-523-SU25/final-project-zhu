@@ -15,7 +15,6 @@ editor: visual
 execute:
   warning: false
   echo: false
-  echo: false
 jupyter: python3
 ---
 
@@ -70,6 +69,7 @@ df['anomaly'] = ((df['pct_chg'].abs() >= 5) |
 #| fig-cap: "Correlation Heatmap of Selected Features"
 #| message: false
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 selected_features = ['momentum_rsi', 'volume_obv', 'volatility_atr', 
                     'trend_macd_diff', 'volume_vpt', 'trend_adx']
