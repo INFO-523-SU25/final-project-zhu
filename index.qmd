@@ -2,7 +2,7 @@
 title: "Forecasting Anomalies in AtHub’s Stock Behavior"
 subtitle: "INFO 523 - Final Project"
 author: 
-  - name: "Team A - Team member Annabelle Zhu"
+  - name: "Annabelle Zhu"
     affiliations:
       - name: "College of Information Science, University of Arizona"
 description: "Project description"
@@ -26,35 +26,7 @@ This project investigates whether abnormal price and volume fluctuations in AtHu
 
 Predicting sudden shifts in equity price or trading volume is a long-standing challenge in financial forecasting, particularly for high-volatility stocks sensitive to external shocks. This project centers on AtHub (603881.SH), a stock known for its erratic short-term behavior and policy-driven sensitivity, to assess whether machine learning models can detect early signs of abnormal market activity. Unlike traditional models that aim to forecast precise price levels, our approach reframes the task as a binary classification problem focused on identifying rare but impactful events. We rely exclusively on market-based features—technical indicators derived from historical prices and volumes—to build a predictive framework that aligns with real-world constraints where external signals (e.g., news sentiment, fundamentals) may be unavailable or delayed. By integrating explainable AI methods into the model workflow, this project also emphasizes transparency and trustworthiness in financial ML applications.
 
-## Feature Engineering Details
 
-### Technical Indicators Generated
-
-We engineer 30+ TA features across 4 key dimensions:
-
-#### 1. **Momentum Indicators**
-
--   **RSI (14-day)**: Identifies overbought (\>70) and oversold (\<30) conditions
--   **MACD (12,26,9)**: Captures trend direction and momentum shifts
--   **Williams %R (14-day)**: Measures closing prices relative to recent highs/lows
-
-### 2. **Volume Indicators**
-
--   **OBV (On-Balance Volume)**: Cumulative volume flow predictor
--   **Volume MFI (14-day)**: Money Flow Index combining price/volume
--   **VPT (Volume Price Trend)**: Similar to OBV but more sensitive
-
-### 3. **Volatility Indicators**
-
--   **ATR (14-day)**: Average True Range for volatility measurement
--   **Bollinger Band Width**: Normalized volatility metric
--   **Ulcer Index**: Drawdown-based risk measure
-
-### 4. **Trend Indicators**
-
--   **ADX (14-day)**: Trend strength quantifier
--   **Aroon Oscillator**: Identifies trend changes
--   **CCI (20-day)**: Cyclical trend detector
 
 ```{python}
 import pandas as pd
@@ -65,53 +37,6 @@ df['anomaly'] = ((df['pct_chg'].abs() >= 5) |
 ```
 
 ```{python}
-#| label: feature-correlation
-#| fig-cap: "Correlation Heatmap of Selected Features"
-#| message: false
-import seaborn as sns
-import matplotlib.pyplot as plt
 
-selected_features = ['momentum_rsi', 'volume_obv', 'volatility_atr', 
-                    'trend_macd_diff', 'volume_vpt', 'trend_adx']
-corr_matrix = df[selected_features].corr()
-
-plt.figure(figsize=(8,6))
-sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0)
-plt.title('Feature Correlation Matrix')
-plt.show()
 ```
 
-# Model Development Approach
-
-## Data Splitting Strategy
-
-Given the time-series nature of stock data, we implement: - **Chronological split**: First 80% for training, last 20% for testing - **Walk-forward validation**: Expanding window cross-validation
-
-## Evaluation Metrics
-
-We prioritize: - **Recall**: Minimizing false negatives (missed anomalies) - **F1-score**: Balancing precision/recall - **Matthews Correlation Coefficient**: Robust to class imbalance
-
-## Baseline Models
-
-| Model | Strengths | Weaknesses |
-|----|----|----|
-| **XGBoost** | Handles nonlinear relationships | Requires careful tuning |
-| **LightGBM** | Efficient with large features | Sensitive to outliers |
-| **Logistic Regression** | Interpretable coefficients | Limited nonlinear capacity |
-
-# Expected Outcomes
-
-1.  **Threshold Analysis Results**:
-    -   Precision-recall curves for ±3%/±5%/±7% thresholds
-    -   Optimal threshold selection based on trading costs
-2.  **Top Predictive Features**:
-    -   SHAP summary plot of top 10 influential indicators
-    -   Temporal importance patterns (e.g., volume leads price)
-3.  **Practical Trading Rules**:
-    -   Actionable signals like:\
-        *"When RSI \> 70 AND OBV \< 30-day average → 67% probability of next-day drop \>5%"*
-4.  **Interactive Dashboard**:
-    -   Dynamic visualization of anomaly predictions
-    -   Threshold adjustment interface
-
-------------------------------------------------------------------------

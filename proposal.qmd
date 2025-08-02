@@ -2,7 +2,7 @@
 title: "Forecasting Anomalies in AtHub’s Stock Behavior"
 subtitle: "Data-Driven Detection of Local Peaks and Dips"
 author: 
-  - name: "Team A - Team member Annabelle Zhu"
+  - name: "Annabelle Zhu"
     affiliations:
       - name: "College of Information Science, University of Arizona"
 description: "Project description"
@@ -13,6 +13,7 @@ format:
     code-line-numbers: true
     embed-resources: true
 editor: visual
+bibliography: references.bib
 code-annotations: hover
 execute:
   warning: false
@@ -22,7 +23,7 @@ jupyter: python3
 
 # Proposal
 
-This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.
+This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements [@lin2024datahub]. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.
 
 We aim to construct a binary classifier that leverages over 30 technical analysis (TA) indicators across momentum, volume, trend, and volatility domains. These features are engineered using the Tushare API and the `tsta` library, covering 218 trading days of AtHub data. The project will incorporate time-aware cross-validation to avoid look-ahead bias and SHAP analysis for post-hoc interpretability. Ensemble models like LightGBM and XGBoost will serve as the backbone of the predictive framework, selected for their robustness in handling noisy, nonlinear tabular data. The final outcome will include an interactive visualization of feature contributions, along with a brief report and presentation.
 
@@ -36,6 +37,8 @@ To develop a machine learning classifier that predicts next-day abnormal volatil
 #| label: load-pkgs
 #| message: false
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pandas as pd
 ```
 
@@ -65,7 +68,6 @@ df.info()
 #| label: target-visualization
 #| fig-cap: "Distribution of Anomaly Labels (Target Variable)"
 #| message: false
-import matplotlib.pyplot as plt
 
 # Calculate anomaly days
 df['anomaly'] = ((df['pct_chg'].abs() >= 5) | 
@@ -84,6 +86,68 @@ ax2.set_title('Daily Returns Distribution (±5% Threshold)')
 plt.tight_layout()
 plt.show()
 ```
+
+
+## Feature Construction Strategy
+
+To effectively model price and volume anomalies, we engineered over 30 technical indicators across four core dimensions widely adopted in quantitative trading:
+
+* **Momentum** (e.g., RSI, MACD, Williams %R): capture price velocity and potential reversals.
+* **Volume-based** (e.g., OBV, MFI, VPT): track accumulation/distribution behavior.
+* **Volatility** (e.g., ATR, Bollinger Band Width, Ulcer Index): quantify market turbulence.
+* **Trend strength** (e.g., ADX, Aroon, CCI): detect the emergence or weakening of price trends.
+
+These indicators were computed using the `tsta` Python library and merged with daily OHLCV data. We conducted correlation analysis to filter redundant signals and retain complementary ones, as illustrated in the figure below.
+
+```{python}
+#| label: feature-target-corr
+#| fig-cap: "Correlation Between Features and Target (Anomaly)"
+#| message: false
+
+from scipy.stats import pointbiserialr
+
+selected_features = ['momentum_rsi', 'volume_obv', 'volatility_atr', 
+                     'trend_macd_diff', 'volume_vpt', 'trend_adx']
+
+corr_with_target = {}
+for col in selected_features:
+    corr, _ = pointbiserialr(df['anomaly'], df[col])
+    corr_with_target[col] = corr
+
+# Plot
+plt.figure(figsize=(8,5))
+sns.barplot(x=list(corr_with_target.values()), y=list(corr_with_target.keys()), palette='coolwarm')
+plt.xlabel('Point Biserial Correlation with Target (Anomaly)')
+plt.title('Feature-Target Correlation')
+plt.grid(axis='x', linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+```
+
+This engineered feature space provides interpretable signals that are sensitive to both directional shifts and liquidity changes—two major components in anomaly formation.
+
+
+
+## Model Development Approach
+
+### Data Splitting Strategy
+
+Given the time-series nature of stock data, we implement: - **Chronological split**: First 80% for training, last 20% for testing - **Walk-forward validation**: Expanding window cross-validation
+
+### Evaluation Metrics
+
+We prioritize: - **Recall**: Minimizing false negatives (missed anomalies) - **F1-score**: Balancing precision/recall - **Matthews Correlation Coefficient**: Robust to class imbalance
+
+### Baseline Models
+
+| Model | Strengths | Weaknesses |
+|------------------------|------------------------|------------------------|
+| **XGBoost** | Handles nonlinear relationships | Requires careful tuning |
+| **LightGBM** | Efficient with large features | Sensitive to outliers |
+| **Logistic Regression** | Interpretable coefficients | Limited nonlinear capacity |
+
+
 
 # Dataset Summary
 
@@ -174,6 +238,23 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
         -   Clear `index.qmd` as entry point.
 -   **Tools**: Quarto, `plotly`, `pkgdown`
 
+# Expected Outcomes
+
+1.  **Threshold Analysis Results**:
+    -   Precision-recall curves for ±3%/±5%/±7% thresholds
+    -   Optimal threshold selection based on trading costs
+2.  **Top Predictive Features**:
+    -   SHAP summary plot of top 10 influential indicators
+    -   Temporal importance patterns (e.g., volume leads price)
+3.  **Practical Trading Rules**:
+    -   Actionable signals like:\
+        *"When RSI \> 70 AND OBV \< 30-day average → 67% probability of next-day drop \>5%"*
+4.  **Interactive Dashboard**:
+    -   Dynamic visualization of anomaly predictions
+    -   Threshold adjustment interface
+
+
 # Reference
 
 林竑皓, 唐海清, 王奕红, & 缪欣君. (2024年12月18日). 数据港（603881）：国有数据中心龙头，整体经营稳步向上 \[公司研究报告\]. 天风证券. https://www.tfzq.com
+
