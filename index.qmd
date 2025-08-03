@@ -17,26 +17,107 @@ execute:
   echo: false
 jupyter: python3
 ---
-
 # Abstract
 
 This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities.
+
+---
 
 # Introduction
 
 Predicting sudden shifts in equity price or trading volume is a long-standing challenge in financial forecasting, particularly for high-volatility stocks sensitive to external shocks. This project centers on AtHub (603881.SH), a stock known for its erratic short-term behavior and policy-driven sensitivity, to assess whether machine learning models can detect early signs of abnormal market activity. Unlike traditional models that aim to forecast precise price levels, our approach reframes the task as a binary classification problem focused on identifying rare but impactful events. We rely exclusively on market-based features—technical indicators derived from historical prices and volumes—to build a predictive framework that aligns with real-world constraints where external signals (e.g., news sentiment, fundamentals) may be unavailable or delayed. By integrating explainable AI methods into the model workflow, this project also emphasizes transparency and trustworthiness in financial ML applications.
 
+---
+
+# Exploratory Analysis
+
+## Loading and Initial Preparation
+
+```{python}
+#| label: load packages
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
 
 
 ```{python}
-import pandas as pd
+#| label: load dataset
 df = pd.read_csv("data/stock_cleaned.csv")
-
-df['anomaly'] = ((df['pct_chg'].abs() >= 5) | 
-                (df['vol'] > 2 * df['vol'].rolling(30).mean())).astype(int)
 ```
 
 ```{python}
+# Display basic info
+print(f"Total observations: {len(df)}")
+print(f"Number of Columns: {len(df.columns)}")
+```
 
+## Target Variable Engineering
+
+### Define the binary target: will there be an anomaly tomorrow?
+
+```{python}
+# comment: Calculate 30-day volume moving average and find ± pct_chg 
+df['vol_ma30'] = df['vol'].rolling(30).mean()
+
+df['anomaly'] = ((df['pct_chg'].abs() >= 5) | 
+                (df['vol'] > 2 * df['vol'].rolling(30).mean())).astype(int)
+                
+
+# Remove last row (no future data)
+df = df.iloc[:-1] # drop last row with NaN target
+
+```
+
+To better understand the imbalance in the target variable, we plot the proportion of anomaly vs. normal days. An anomaly day is defined as either a $\pm$5% price change or a volume spike above twice the 30-day moving average. The bar chart highlights the class imbalance, a common challenge in financial anomaly detection.
+
+
+
+```{python}
+#| label: target-distribution-bar
+#| fig-cap: "Class Distribution of Target Labels"
+#| comment: "Bar plot showing the proportion of anomaly vs. normal days in the dataset."
+
+# Compute normalized class distribution of anomaly labels
+target_dist = df['anomaly'].value_counts(normalize=True)
+
+# Plot class distribution as a bar chart
+plt.figure(figsize=(8, 5))
+sns.barplot(x=target_dist.index, y=target_dist.values, palette=['#66c2a5', '#fc8d62'])
+plt.title('Target Class Distribution')
+plt.xlabel('Is Anomaly Day?')
+plt.ylabel('Proportion')
+plt.xticks([0, 1], ['Normal', 'Anomaly'])
+plt.show()
+
+```
+
+### Data-cleaning
+
+
+
+```{python}
+# Check for missing values
+print("Missing values per column:")
+print(df.isnull().sum())
+
+```
+
+```{python}
+# Handle missing values
+df = df.dropna(subset=['vol_ma30'])  # Remove rows without volume MA
+df = df.fillna(method='ffill')  # Forward fill other missing values
+
+```
+### Data Reduction
+
+
+```{python}
+# Remove unnecessary columns
+to_drop = ['ts_code', 'trend_adx_pos', 'trend_adx_neg', 'trend_aroon_ind']
+df = df.drop(columns=to_drop)
+print(f"Remaining features: {df.shape[1]}")
 ```
 

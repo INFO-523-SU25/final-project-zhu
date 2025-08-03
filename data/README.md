@@ -27,7 +27,7 @@ These indicators are commonly used by traders and quants to detect patterns, mom
 | `close`             | Closing price (target variable)                   |
 | `pct_chg`           | Daily percentage change                           |
 | `vol`               | Trading volume                                    |
-| `amount`            | Trading amount (成交额)                              |
+| `amount`            | Trading amount                             |
 | `volume_obv`        | On-Balance Volume                                 |
 | `volume_cmf`        | Chaikin Money Flow                                |
 | `volume_vpt`        | Volume Price Trend                                |

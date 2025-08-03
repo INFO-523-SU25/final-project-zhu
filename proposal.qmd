@@ -5,7 +5,7 @@ author:
   - name: "Annabelle Zhu"
     affiliations:
       - name: "College of Information Science, University of Arizona"
-description: "Project description"
+description: "This project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock *AtHub (603881.SH)*—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators."
 format:
   html:
     code-tools: true
@@ -20,7 +20,6 @@ execute:
   echo: false
 jupyter: python3
 ---
-
 # 📝 Proposal
 
 This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements [@lin2024datahub]. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.
@@ -29,7 +28,7 @@ We aim to construct a binary classifier that leverages over 30 technical analysi
 
 This proposal reflects a practical and scalable approach to market anomaly detection, especially relevant for traders and risk managers seeking data-driven early warning systems.
 
----
+------------------------------------------------------------------------
 
 # 🎯 High-Level Goal
 
@@ -44,7 +43,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 ```
 
----
+------------------------------------------------------------------------
 
 # 📊 Dataset
 
@@ -66,14 +65,13 @@ df.info()
 
 ```
 
-
 ## Dataset Summary
 
 The dataset is sourced via the **Tushare API** and engineered using Python’s `tsta` technical indicator library. It includes:
 
 -   **375 daily records** of AtHub stock trading from the past \~18 months
 
--   **32 columns**, including:
+-   **31 columns**, including:
 
     -   **Price data**: `open`, `high`, `low`, `close`, `pct_chg`
     -   **Volume metrics**: `vol`, `amount`, `volume_obv`, `volume_cmf`, `volume_vpt`, `volume_vwap`, `volume_mfi`
@@ -82,13 +80,12 @@ The dataset is sourced via the **Tushare API** and engineered using Python’s `
 
 This feature-rich time series provides a robust foundation for testing anomaly detection models under realistic, noisy conditions.
 
-
 ## Target `Anomalies`
 
 ```{python}
 #| label: target-visualization
 #| fig-cap: "Distribution of Anomaly Labels (Target Variable)"
-#| message: false
+#| fig-subcap: ["Anomaly Class Distribution", "Daily Returns Histogram"]
 
 # Calculate anomaly days
 df['anomaly'] = ((df['pct_chg'].abs() >= 5) | 
@@ -108,22 +105,20 @@ plt.tight_layout()
 plt.show()
 ```
 
-
 ## Feature Construction Strategy
 
 To effectively model price and volume anomalies, we engineered over 30 technical indicators across four core dimensions widely adopted in quantitative trading:
 
-* **Momentum** (e.g., RSI, MACD, Williams %R): capture price velocity and potential reversals.
-* **Volume-based** (e.g., OBV, MFI, VPT): track accumulation/distribution behavior.
-* **Volatility** (e.g., ATR, Bollinger Band Width, Ulcer Index): quantify market turbulence.
-* **Trend strength** (e.g., ADX, Aroon, CCI): detect the emergence or weakening of price trends.
+-   **Momentum** (e.g., RSI, MACD, Williams %R): capture price velocity and potential reversals.
+-   **Volume-based** (e.g., OBV, MFI, VPT): track accumulation/distribution behavior.
+-   **Volatility** (e.g., ATR, Bollinger Band Width, Ulcer Index): quantify market turbulence.
+-   **Trend strength** (e.g., ADX, Aroon, CCI): detect the emergence or weakening of price trends.
 
 These indicators were computed using the `tsta` Python library and merged with daily OHLCV data. We conducted correlation analysis to filter redundant signals and retain complementary ones, as illustrated in the figure below.
 
 ```{python}
 #| label: feature-target-corr
 #| fig-cap: "Correlation Between Features and Target (Anomaly)"
-#| message: false
 
 from scipy.stats import pointbiserialr
 
@@ -148,17 +143,23 @@ plt.show()
 
 This engineered feature space provides interpretable signals that are sensitive to both directional shifts and liquidity changes—two major components in anomaly formation.
 
-
-
 ## Model Development Approach
 
 ### Data Splitting Strategy
 
-Given the time-series nature of stock data, we implement: - **Chronological split**: First 80% for training, last 20% for testing - **Walk-forward validation**: Expanding window cross-validation
+Given the time-series nature of stock data, we implement:
+
+-   **Chronological split**: First 80% for training, last 20% for testing
+
+-   **Walk-forward validation**: Expanding window cross-validation
 
 ### Evaluation Metrics
 
-We prioritize: - **Recall**: Minimizing false negatives (missed anomalies) - **F1-score**: Balancing precision/recall - **Matthews Correlation Coefficient**: Robust to class imbalance
+We prioritize: - **Recall**: Minimizing false negatives (missed anomalies)
+
+-   **F1-score**: Balancing precision/recall
+
+-   **Matthews Correlation Coefficient**: Robust to class imbalance
 
 ### Baseline Models
 
@@ -168,12 +169,11 @@ We prioritize: - **Recall**: Minimizing false negatives (missed anomalies) - **F
 | **LightGBM** | Efficient with large features | Sensitive to outliers |
 | **Logistic Regression** | Interpretable coefficients | Limited nonlinear capacity |
 
-
----
+------------------------------------------------------------------------
 
 # 📍 Motivation & Goals
 
-**Why AtHub (603881.SH)?** AtHub is a leading Chinese data center infrastructure provider whose stock exhibits unusually high short-term volatility, making it a strong candidate for anomaly-based forecasting. Over the past six months, its daily return volatility (σ ≈ 35%) has far exceeded the industry average (≈ 22%). Moreover, its price reacts sharply to regulatory announcements and policy shifts, reflecting its sensitivity to macro-level and sector-specific events.
+**Why AtHub (603881.SH)?** AtHub is a leading Chinese data center infrastructure provider whose stock exhibits unusually high short-term volatility, making it a strong candidate for anomaly-based forecasting. Over the past six months, its daily return volatility ($\sigma \approx$ 35%) has far exceeded the industry average ($\approx$ 22%). Moreover, its price reacts sharply to regulatory announcements and policy shifts, reflecting its sensitivity to macro-level and sector-specific events.
 
 This project aims to detect and forecast short-term abnormal volatility events in AtHub’s stock using supervised machine learning. Instead of heuristic rules, we define volatility anomalies using **quantifiable thresholds**: price changes beyond ±5% or trading volumes exceeding 2× the 30-day average. Our key goals are:
 
@@ -183,7 +183,7 @@ This project aims to detect and forecast short-term abnormal volatility events i
 
 SHAP analysis is integrated to uncover feature interactions that precede volatility (e.g., “high RSI + declining OBV” may precede reversals), offering not just predictive power but also interpretability.
 
----
+------------------------------------------------------------------------
 
 # 👓 Research Questions
 
@@ -193,7 +193,7 @@ SHAP analysis is integrated to uncover feature interactions that precede volatil
 
 -   Q3. How do anomaly thresholds (±3% vs. ±5% vs. ±7% price; 1.8x vs. 2.5x volume) impact model performance?
 
----
+------------------------------------------------------------------------
 
 # 🚩 Analysis plan
 
@@ -210,7 +210,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
         -   Visualize price/volume trends and anomaly frequency.
         -   Check for missing data, outliers, and stationarity.
         -   Analyze correlation between raw price/volume metrics.
-    -   Define preliminary anomaly thresholds (±5% returns, 2× volume).
+    -   Define preliminary anomaly thresholds ($\pm$5% returns, 2$\times$ volume).
 -   **Tools**: `tushare`, `pandas`, `matplotlib`, `ta`, `seaborn`.
 
 #### **Week 2: Feature Engineering & Baseline Model**
@@ -227,7 +227,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 
 -   **Tasks**:
     -   Optimize hyperparameters using time-series cross-validation.
-    -   Compare performance across thresholds (±3%, ±5%, ±7%).
+    -   Compare performance across thresholds ($\pm$3%, $\pm$5%, $\pm$7%).
     -   Apply SHAP to identify top predictive features and patterns.
     -   Test feature lead times (1–3 days pre-anomaly).
 -   **Research Questions Addressed**:
@@ -252,33 +252,32 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 ## Expected Outcomes
 
 1.  **Threshold Analysis Results**:
-    -   Precision-recall curves for ±3%/±5%/±7% thresholds
+    -   Precision-recall curves for $\pm$3%/$\pm$5%/$\pm$7% thresholds
     -   Optimal threshold selection based on trading costs
 2.  **Top Predictive Features**:
     -   SHAP summary plot of top 10 influential indicators
     -   Temporal importance patterns (e.g., volume leads price)
 3.  **Practical Trading Rules**:
     -   Actionable signals like:\
-        *"When RSI \> 70 AND OBV \< 30-day average $\to$ 67% probability of next-day drop \>5%"*
+        *"When RSI \> 70 AND OBV \< 30-day average* $\to$ 67% probability of next-day drop \>5%"
 4.  **Interactive Dashboard**:
     -   Dynamic visualization of anomaly predictions
     -   Threshold adjustment interface
 
----
+------------------------------------------------------------------------
 
 # 📁 Repository Organization
 
-| Folder / File Name | Description                                                                                                    |
-| ------------------ | -------------------------------------------------------------------------------------------------------------- |
-| `.quarto/`         | Internal Quarto system files; manages cache and config for rendering. Not manually edited.                     |
-| `_extra/`          | Holds supplementary files or artifacts not directly part of deliverables.                                      |
-| `_freeze/`         | Stores frozen snapshots of document outputs to ensure reproducibility across builds.                           |
-| `_site/`           | Output folder generated when the site is rendered; contains final HTML files.                                  |
-| `data/`            | Contains all datasets used in the project, both raw and processed. Includes README for data schema and source. |
-| `images/`          | Stores all image assets, including plots and figures used in `.qmd` files.                                     |
-| `style/`           | Contains custom theming files (e.g., `customtheming.scss`) used to style the website.                          |
-| `index.qmd`        | Landing page of the Quarto website; typically includes a high-level **project overview** or introduction.      |
-| `about.qmd`        | Additional project background or author info. Can serve as a **detailed project description**.                 |
-| `proposal.qmd`     | Contains the research proposal, including motivation, methodology, timeline, and repo organization.            |
-| `presentation.qmd` | A Quarto-based presentation (slides) summarizing key findings from the final report.                           |
-
+| Folder / File Name | Description |
+|-------------------|-----------------------------------------------------|
+| `.quarto/` | Internal Quarto system files; manages cache and config for rendering. Not manually edited. |
+| `_extra/` | Holds supplementary files or artifacts not directly part of deliverables. |
+| `_freeze/` | Stores frozen snapshots of document outputs to ensure reproducibility across builds. |
+| `_site/` | Output folder generated when the site is rendered; contains final HTML files. |
+| `data/` | Contains all datasets used in the project, both raw and processed. Includes README for data schema and source. |
+| `images/` | Stores all image assets, including plots and figures used in `.qmd` files. |
+| `style/` | Contains custom theming files (e.g., `customtheming.scss`) used to style the website. |
+| `index.qmd` | Landing page of the Quarto website; typically includes a high-level **project overview** or introduction. |
+| `about.qmd` | Additional project background or author info. Can serve as a **detailed project description**. |
+| `proposal.qmd` | Contains the research proposal, including motivation, methodology, timeline, and repo organization. |
+| `presentation.qmd` | A Quarto-based presentation (slides) summarizing key findings from the final report. |

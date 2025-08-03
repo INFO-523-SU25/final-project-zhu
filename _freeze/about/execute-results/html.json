@@ -1,8 +1,8 @@
 {
-  "hash": "420ef0a4c550419d9277b84cea146f2d",
+  "hash": "ace8e2359c9ba3c7f341069693e12947",
   "result": {
     "engine": "jupyter",
-    "markdown": "---\ntitle: \"About\"\nformat: html\neditor: visual\njupyter: python3\n---\n\nThis project was developed by **Annabelle Zhu** For [INFO 523 - Data Mining and Discovery](https://datamineaz.org/) at the University of Arizona, taught by Dr. Greg Chism.\n\n",
+    "markdown": "---\ntitle: About\nformat: html\neditor: visual\n---\n\n# Project Overview\n\nThis project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock *AtHub (603881.SH)*—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators.\n\nWe define anomalies as:\n\n- **Price spikes or crashes**: Daily returns exceeding $\\pm$5%.\n\n- **Volume surges**: Daily trading volume exceeding 2× the 30-day moving average.\n\nBy engineering over 30 TA-based features (momentum, trend, volume, and volatility), we aim to identify leading patterns that consistently precede such events.\n\n---\n\n# Approach Summary\n\n- **Data Collection**: Daily OHLCV data for *AtHub* over a multi-year period.\n- **Feature Engineering**: Over 30 technical indicators computed using rolling windows.\n- **Modeling**: Supervised learning for anomaly classification (binary targets).\n- **Evaluation**: Time-aware cross-validation to preserve chronological integrity.\n- **Interpretation**: SHAP analysis to understand key feature interactions.\n\n---\n\n# Contributors\n\nThis project was developed by\n\n- **Annabelle Zhu**, Project Author\n- **Dr. Greg Chism**, Professor of INFO 523.\n\n",
     "supporting": [
       "about_files"
     ],

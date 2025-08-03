@@ -4,5 +4,33 @@ format: html
 editor: visual
 jupyter: python3
 ---
+# Project Overview
 
-This project was developed by **Annabelle Zhu** For [INFO 523 - Data Mining and Discovery](https://datamineaz.org/) at the University of Arizona, taught by Dr. Greg Chism.
+This project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock *AtHub (603881.SH)*—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators.
+
+We define anomalies as:
+
+- **Price spikes or crashes**: Daily returns exceeding $\pm$5%.
+
+- **Volume surges**: Daily trading volume exceeding 2× the 30-day moving average.
+
+By engineering over 30 TA-based features (momentum, trend, volume, and volatility), we aim to identify leading patterns that consistently precede such events.
+
+---
+
+# Approach Summary
+
+- **Data Collection**: Daily OHLCV data for *AtHub* over a multi-year period.
+- **Feature Engineering**: Over 30 technical indicators computed using rolling windows.
+- **Modeling**: Supervised learning for anomaly classification (binary targets).
+- **Evaluation**: Time-aware cross-validation to preserve chronological integrity.
+- **Interpretation**: SHAP analysis to understand key feature interactions.
+
+---
+
+# Contributors
+
+This project was developed by
+
+- **Annabelle Zhu**, Project Author
+- **Dr. Greg Chism**, Professor of INFO 523.
