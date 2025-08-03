@@ -42,9 +42,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2342a18cfad2f78d9ae70bdd19074d8f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-6f8d23a343b7f0fc176f32cb669d4fe1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-2342a18cfad2f78d9ae70bdd19074d8f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ce8fd075cc51fb9efb2ef0a5b53d31cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-b7b17a774a23033657ef4377f58d4dc4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-ce8fd075cc51fb9efb2ef0a5b53d31cd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -288,8 +288,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
+  <li><a href="#approach-summary" id="toc-approach-summary" class="nav-link" data-scroll-target="#approach-summary">Approach Summary</a></li>
+  <li><a href="#contributors" id="toc-contributors" class="nav-link" data-scroll-target="#contributors">Contributors</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -314,9 +322,38 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This project was developed by <strong>Annabelle Zhu</strong> For <a href="https://datamineaz.org/">INFO 523 - Data Mining and Discovery</a> at the University of Arizona, taught by Dr.&nbsp;Greg Chism.</p>
+<section id="project-overview" class="level1">
+<h1>Project Overview</h1>
+<p>This project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock <em>AtHub (603881.SH)</em>—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators.</p>
+<p>We define anomalies as:</p>
+<ul>
+<li><p><strong>Price spikes or crashes</strong>: Daily returns exceeding $$5%.</p></li>
+<li><p><strong>Volume surges</strong>: Daily trading volume exceeding 2× the 30-day moving average.</p></li>
+</ul>
+<p>By engineering over 30 TA-based features (momentum, trend, volume, and volatility), we aim to identify leading patterns that consistently precede such events.</p>
+<hr>
+</section>
+<section id="approach-summary" class="level1">
+<h1>Approach Summary</h1>
+<ul>
+<li><strong>Data Collection</strong>: Daily OHLCV data for <em>AtHub</em> over a multi-year period.</li>
+<li><strong>Feature Engineering</strong>: Over 30 technical indicators computed using rolling windows.</li>
+<li><strong>Modeling</strong>: Supervised learning for anomaly classification (binary targets).</li>
+<li><strong>Evaluation</strong>: Time-aware cross-validation to preserve chronological integrity.</li>
+<li><strong>Interpretation</strong>: SHAP analysis to understand key feature interactions.</li>
+</ul>
+<hr>
+</section>
+<section id="contributors" class="level1">
+<h1>Contributors</h1>
+<p>This project was developed by</p>
+<ul>
+<li><strong>Annabelle Zhu</strong>, Project Author</li>
+<li><strong>Dr.&nbsp;Greg Chism</strong>, Professor of INFO 523.</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
