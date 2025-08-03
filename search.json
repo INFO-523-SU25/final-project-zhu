@@ -4,7 +4,7 @@
     "href": "proposal.html",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "",
-    "text": "This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.\nWe aim to construct a binary classifier that leverages over 30 technical analysis (TA) indicators across momentum, volume, trend, and volatility domains. These features are engineered using the Tushare API and the tsta library, covering 218 trading days of AtHub data. The project will incorporate time-aware cross-validation to avoid look-ahead bias and SHAP analysis for post-hoc interpretability. Ensemble models like LightGBM and XGBoost will serve as the backbone of the predictive framework, selected for their robustness in handling noisy, nonlinear tabular data. The final outcome will include an interactive visualization of feature contributions, along with a brief report and presentation.\nThis proposal reflects a practical and scalable approach to market anomaly detection, especially relevant for traders and risk managers seeking data-driven early warning systems."
+    "text": "This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements (Lin et al. 2024). Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.\nWe aim to construct a binary classifier that leverages over 30 technical analysis (TA) indicators across momentum, volume, trend, and volatility domains. These features are engineered using the Tushare API and the tsta library, covering 218 trading days of AtHub data. The project will incorporate time-aware cross-validation to avoid look-ahead bias and SHAP analysis for post-hoc interpretability. Ensemble models like LightGBM and XGBoost will serve as the backbone of the predictive framework, selected for their robustness in handling noisy, nonlinear tabular data. The final outcome will include an interactive visualization of feature contributions, along with a brief report and presentation.\nThis proposal reflects a practical and scalable approach to market anomaly detection, especially relevant for traders and risk managers seeking data-driven early warning systems."
   },
   {
     "objectID": "proposal.html#dataset-info",
@@ -21,6 +21,20 @@
     "text": "Target Anomalies\n\n\n\n\n\nDistribution of Anomaly Labels (Target Variable)"
   },
   {
+    "objectID": "proposal.html#feature-construction-strategy",
+    "href": "proposal.html#feature-construction-strategy",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Feature Construction Strategy",
+    "text": "Feature Construction Strategy\nTo effectively model price and volume anomalies, we engineered over 30 technical indicators across four core dimensions widely adopted in quantitative trading:\n\nMomentum (e.g., RSI, MACD, Williams %R): capture price velocity and potential reversals.\nVolume-based (e.g., OBV, MFI, VPT): track accumulation/distribution behavior.\nVolatility (e.g., ATR, Bollinger Band Width, Ulcer Index): quantify market turbulence.\nTrend strength (e.g., ADX, Aroon, CCI): detect the emergence or weakening of price trends.\n\nThese indicators were computed using the tsta Python library and merged with daily OHLCV data. We conducted correlation analysis to filter redundant signals and retain complementary ones, as illustrated in the figure below.\n\n\n\n\n\nCorrelation Between Features and Target (Anomaly)\n\n\n\n\nThis engineered feature space provides interpretable signals that are sensitive to both directional shifts and liquidity changes—two major components in anomaly formation."
+  },
+  {
+    "objectID": "proposal.html#model-development-approach",
+    "href": "proposal.html#model-development-approach",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Development Approach",
+    "text": "Model Development Approach\n\nData Splitting Strategy\nGiven the time-series nature of stock data, we implement: - Chronological split: First 80% for training, last 20% for testing - Walk-forward validation: Expanding window cross-validation\n\n\nEvaluation Metrics\nWe prioritize: - Recall: Minimizing false negatives (missed anomalies) - F1-score: Balancing precision/recall - Matthews Correlation Coefficient: Robust to class imbalance\n\n\nBaseline Models\n\n\n\n\n\n\n\n\nModel\nStrengths\nWeaknesses\n\n\n\n\nXGBoost\nHandles nonlinear relationships\nRequires careful tuning\n\n\nLightGBM\nEfficient with large features\nSensitive to outliers\n\n\nLogistic Regression\nInterpretable coefficients\nLimited nonlinear capacity"
+  },
+  {
     "objectID": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
     "href": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
@@ -32,42 +46,14 @@
     "href": "index.html",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "",
-    "text": "This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities."
-  },
-  {
-    "objectID": "index.html#feature-engineering-details",
-    "href": "index.html#feature-engineering-details",
-    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
-    "section": "Feature Engineering Details",
-    "text": "Feature Engineering Details\n\nTechnical Indicators Generated\nWe engineer 30+ TA features across 4 key dimensions:\n\n1. Momentum Indicators\n\nRSI (14-day): Identifies overbought (&gt;70) and oversold (&lt;30) conditions\nMACD (12,26,9): Captures trend direction and momentum shifts\nWilliams %R (14-day): Measures closing prices relative to recent highs/lows\n\n\n\n\n2. Volume Indicators\n\nOBV (On-Balance Volume): Cumulative volume flow predictor\nVolume MFI (14-day): Money Flow Index combining price/volume\nVPT (Volume Price Trend): Similar to OBV but more sensitive\n\n\n\n3. Volatility Indicators\n\nATR (14-day): Average True Range for volatility measurement\nBollinger Band Width: Normalized volatility metric\nUlcer Index: Drawdown-based risk measure\n\n\n\n4. Trend Indicators\n\nADX (14-day): Trend strength quantifier\nAroon Oscillator: Identifies trend changes\nCCI (20-day): Cyclical trend detector\n\n\n\n\n\n\nCorrelation Heatmap of Selected Features"
-  },
-  {
-    "objectID": "index.html#data-splitting-strategy",
-    "href": "index.html#data-splitting-strategy",
-    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
-    "section": "Data Splitting Strategy",
-    "text": "Data Splitting Strategy\nGiven the time-series nature of stock data, we implement: - Chronological split: First 80% for training, last 20% for testing - Walk-forward validation: Expanding window cross-validation"
-  },
-  {
-    "objectID": "index.html#evaluation-metrics",
-    "href": "index.html#evaluation-metrics",
-    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
-    "section": "Evaluation Metrics",
-    "text": "Evaluation Metrics\nWe prioritize: - Recall: Minimizing false negatives (missed anomalies) - F1-score: Balancing precision/recall - Matthews Correlation Coefficient: Robust to class imbalance"
-  },
-  {
-    "objectID": "index.html#baseline-models",
-    "href": "index.html#baseline-models",
-    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
-    "section": "Baseline Models",
-    "text": "Baseline Models\n\n\n\n\n\n\n\n\nModel\nStrengths\nWeaknesses\n\n\n\n\nXGBoost\nHandles nonlinear relationships\nRequires careful tuning\n\n\nLightGBM\nEfficient with large features\nSensitive to outliers\n\n\nLogistic Regression\nInterpretable coefficients\nLimited nonlinear capacity"
+    "text": "Abstract\nThis project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities.\n\n\nIntroduction\nPredicting sudden shifts in equity price or trading volume is a long-standing challenge in financial forecasting, particularly for high-volatility stocks sensitive to external shocks. This project centers on AtHub (603881.SH), a stock known for its erratic short-term behavior and policy-driven sensitivity, to assess whether machine learning models can detect early signs of abnormal market activity. Unlike traditional models that aim to forecast precise price levels, our approach reframes the task as a binary classification problem focused on identifying rare but impactful events. We rely exclusively on market-based features—technical indicators derived from historical prices and volumes—to build a predictive framework that aligns with real-world constraints where external signals (e.g., news sentiment, fundamentals) may be unavailable or delayed. By integrating explainable AI methods into the model workflow, this project also emphasizes transparency and trustworthiness in financial ML applications."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "This project was developed by [Team Name] For INFO 523 - Data Mining and Discovery at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nTeam member 1: One sentence description of Team member 1 (e.g., year, major, etc.).\nTeam member 2: One sentence description of Team member 2 (e.g., year, major, etc.).\nTeam member 3: One sentence description of Team member 3 (e.g., year, major, etc.).\nTeam member 4: One sentence description of Team member 4 (e.g., year, major, etc.)."
+    "text": "This project was developed by Annabelle Zhu For INFO 523 - Data Mining and Discovery at the University of Arizona, taught by Dr. Greg Chism."
   },
   {
     "objectID": "presentation.html#quarto",
@@ -88,7 +74,7 @@
     "href": "presentation.html#code",
     "title": "Project title",
     "section": "Code",
-    "text": "Code\n\n\n                            OLS Regression Results                            \n==============================================================================\nDep. Variable:                    mpg   R-squared:                       0.073\nModel:                            OLS   Adj. R-squared:                  0.070\nMethod:                 Least Squares   F-statistic:                     30.59\nDate:                Sun, 27 Jul 2025   Prob (F-statistic):           5.84e-08\nTime:                        17:12:58   Log-Likelihood:                -1346.4\nNo. Observations:                 392   AIC:                             2697.\nDf Residuals:                     390   BIC:                             2705.\nDf Model:                           1                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst         35.8015      2.266     15.800      0.000      31.347      40.257\nspeed       -354.7055     64.129     -5.531      0.000    -480.788    -228.623\n==============================================================================\nOmnibus:                       27.687   Durbin-Watson:                   0.589\nProb(Omnibus):                  0.000   Jarque-Bera (JB):               18.976\nSkew:                           0.420   Prob(JB):                     7.57e-05\nKurtosis:                       2.323   Cond. No.                         169.\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified."
+    "text": "Code\n\n\n                            OLS Regression Results                            \n==============================================================================\nDep. Variable:                    mpg   R-squared:                       0.073\nModel:                            OLS   Adj. R-squared:                  0.070\nMethod:                 Least Squares   F-statistic:                     30.59\nDate:                Sat, 02 Aug 2025   Prob (F-statistic):           5.84e-08\nTime:                        22:13:16   Log-Likelihood:                -1346.4\nNo. Observations:                 392   AIC:                             2697.\nDf Residuals:                     390   BIC:                             2705.\nDf Model:                           1                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst         35.8015      2.266     15.800      0.000      31.347      40.257\nspeed       -354.7055     64.129     -5.531      0.000    -480.788    -228.623\n==============================================================================\nOmnibus:                       27.687   Durbin-Watson:                   0.589\nProb(Omnibus):                  0.000   Jarque-Bera (JB):               18.976\nSkew:                           0.420   Prob(JB):                     7.57e-05\nKurtosis:                       2.323   Cond. No.                         169.\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified."
   },
   {
     "objectID": "presentation.html#plots",
