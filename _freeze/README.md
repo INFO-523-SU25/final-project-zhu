@@ -1,0 +1,1 @@
+Stores frozen versions of outputs for reproducibility. Useful for tracking model and report versions over time.

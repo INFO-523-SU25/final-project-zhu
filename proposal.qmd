@@ -253,6 +253,18 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
     -   Dynamic visualization of anomaly predictions
     -   Threshold adjustment interface
 
+# Repo Organization
+
+| Folder / File Name | Description                                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `.quarto/`         | Internal Quarto metadata and cache folder; typically managed automatically and not edited manually.        |
+| `_extra/`          | Contains supporting materials or supplementary documents that are not part of the main deliverables.       |
+| `_freeze/`         | Stores frozen outputs or reproducibility snapshots to track model versions and results over time.          |
+| `_site/`           | Automatically generated website output (HTML and assets) after building the Quarto project.                |
+| `images/`          | Stores all image assets used in the project, including figures and visualizations embedded in reports.     |
+| `scripts/`         | Includes source code for data processing, feature engineering, and modeling (Python or R scripts).         |
+| `style/`           | Contains custom styling resources (e.g., `.scss` files) used to enhance the appearance of the Quarto site. |
+
 
 # Reference
 

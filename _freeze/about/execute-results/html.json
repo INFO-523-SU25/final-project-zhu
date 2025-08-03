@@ -4,7 +4,7 @@
     "engine": "jupyter",
     "markdown": "---\ntitle: \"About\"\nformat: html\neditor: visual\njupyter: python3\n---\n\nThis project was developed by **Annabelle Zhu** For [INFO 523 - Data Mining and Discovery](https://datamineaz.org/) at the University of Arizona, taught by Dr. Greg Chism.\n\n",
     "supporting": [
-      "about_files\\figure-html"
+      "about_files"
     ],
     "filters": [],
     "includes": {}

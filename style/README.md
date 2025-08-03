@@ -1,0 +1,1 @@
+Contains custom SCSS and other styling files used to personalize the theme and appearance of the Quarto website.

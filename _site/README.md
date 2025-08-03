@@ -1,0 +1,1 @@
+This folder contains the final rendered HTML files and assets generated when the Quarto project is built.

@@ -1,0 +1,1 @@
+All static image files used in the project documentation and visualizations are stored here.
