@@ -9,7 +9,7 @@ title-slide-attributes:
   data-slide-number: none
 format:
   revealjs:
-    theme:  ['data/customtheming.scss']
+    theme:  ['style/customtheming.scss']
   
 editor: visual
 jupyter: python3
