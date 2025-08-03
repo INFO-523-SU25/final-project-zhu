@@ -1,3 +1,61 @@
 /*-- scss:defaults --*/
 
-$body-bg: #ffffff;
+body {
+  font-family: "Segoe UI", sans-serif;
+  line-height: 1.7;
+  font-size: 16px;
+  color: #333;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a5276;
+  margin-top: 2rem;
+  border-bottom: 3px solid #5dade2;
+  padding-bottom: 0.3rem;
+}
+h2 {
+  font-size: 1.7rem;
+  color: #2e86c1;
+}
+h3 {
+  font-size: 1.4rem;
+  color: #2874a6;
+}
+
+h1::before, h2::before, h3::before {
+  margin-right: 0.5rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+table th,
+table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+table th {
+  background-color: #f2f2f2;
+}
+
+pre code {
+  background-color: #f9f9f9;
+  color: #2c3e50;
+  border-left: 3px solid #5dade2;
+  padding: 0.75rem;
+  display: block;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.figure-caption {
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #555;
+}
