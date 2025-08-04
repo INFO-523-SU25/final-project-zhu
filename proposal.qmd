@@ -20,6 +20,7 @@ execute:
   echo: false
 jupyter: python3
 ---
+
 # 📝 Proposal
 
 This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements [@lin2024datahub]. Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.
@@ -164,7 +165,7 @@ We prioritize: - **Recall**: Minimizing false negatives (missed anomalies)
 ### Baseline Models
 
 | Model | Strengths | Weaknesses |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | **XGBoost** | Handles nonlinear relationships | Requires careful tuning |
 | **LightGBM** | Efficient with large features | Sensitive to outliers |
 | **Logistic Regression** | Interpretable coefficients | Limited nonlinear capacity |
@@ -175,7 +176,7 @@ We prioritize: - **Recall**: Minimizing false negatives (missed anomalies)
 
 **Why AtHub (603881.SH)?** AtHub is a leading Chinese data center infrastructure provider whose stock exhibits unusually high short-term volatility, making it a strong candidate for anomaly-based forecasting. Over the past six months, its daily return volatility ($\sigma \approx$ 35%) has far exceeded the industry average ($\approx$ 22%). Moreover, its price reacts sharply to regulatory announcements and policy shifts, reflecting its sensitivity to macro-level and sector-specific events.
 
-This project aims to detect and forecast short-term abnormal volatility events in AtHub’s stock using supervised machine learning. Instead of heuristic rules, we define volatility anomalies using **quantifiable thresholds**: price changes beyond ±5% or trading volumes exceeding 2× the 30-day average. Our key goals are:
+This project aims to detect and forecast short-term abnormal volatility events in AtHub’s stock using supervised machine learning. Instead of heuristic rules, we define volatility anomalies using **quantifiable thresholds**: price changes beyond ±5% or trading volumes exceeding 2$\times$ the 30-day average. Our key goals are:
 
 -   **Build an interpretable prediction model** using over 30 engineered technical indicators (e.g., MACD, RSI, OBV, ATR).
 -   **Evaluate event-driven prediction performance** using time-series-aware cross-validation and dynamic thresholding strategies.
@@ -191,7 +192,7 @@ SHAP analysis is integrated to uncover feature interactions that precede volatil
 
 -   Q2. Which features drive predictions? Do they align with financial theory?
 
--   Q3. How do anomaly thresholds (±3% vs. ±5% vs. ±7% price; 1.8x vs. 2.5x volume) impact model performance?
+-   Q3. How do anomaly thresholds ($\pm$ 3% vs. $\pm$ 5% vs. $\pm$ 7% price; 1.8 $\times$ vs. 2.5$\times$ volume) impact model performance?
 
 ------------------------------------------------------------------------
 
@@ -210,7 +211,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
         -   Visualize price/volume trends and anomaly frequency.
         -   Check for missing data, outliers, and stationarity.
         -   Analyze correlation between raw price/volume metrics.
-    -   Define preliminary anomaly thresholds ($\pm$5% returns, 2$\times$ volume).
+    -   Define preliminary anomaly thresholds (\$\pm$5% returns, 2$\times\$ volume).
 -   **Tools**: `tushare`, `pandas`, `matplotlib`, `ta`, `seaborn`.
 
 #### **Week 2: Feature Engineering & Baseline Model**
@@ -227,7 +228,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 
 -   **Tasks**:
     -   Optimize hyperparameters using time-series cross-validation.
-    -   Compare performance across thresholds ($\pm$3%, $\pm$5%, $\pm$7%).
+    -   Compare performance across thresholds ($\pm$ 3%, $\pm$ 5%, $\pm$ 7%).
     -   Apply SHAP to identify top predictive features and patterns.
     -   Test feature lead times (1–3 days pre-anomaly).
 -   **Research Questions Addressed**:
@@ -252,7 +253,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 ## Expected Outcomes
 
 1.  **Threshold Analysis Results**:
-    -   Precision-recall curves for $\pm$3%/$\pm$5%/$\pm$7% thresholds
+    -   Precision-recall curves for $\pm$ 3% vs. $\pm$ 5% vs. $\pm$ 7% thresholds
     -   Optimal threshold selection based on trading costs
 2.  **Top Predictive Features**:
     -   SHAP summary plot of top 10 influential indicators
@@ -269,7 +270,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 # 📁 Repository Organization
 
 | Folder / File Name | Description |
-|-------------------|-----------------------------------------------------|
+|----|----|
 | `.quarto/` | Internal Quarto system files; manages cache and config for rendering. Not manually edited. |
 | `_extra/` | Holds supplementary files or artifacts not directly part of deliverables. |
 | `_freeze/` | Stores frozen snapshots of document outputs to ensure reproducibility across builds. |
