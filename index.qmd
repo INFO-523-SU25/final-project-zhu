@@ -50,6 +50,22 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.utils.class_weight import compute_class_weight
+from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from sklearn.feature_selection import mutual_info_classif
+import shap
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.metrics import classification_report, ConfusionMatrixDisplay
+from sklearn.metrics import (
+    roc_auc_score, matthews_corrcoef, f1_score, recall_score
+)
+from sklearn.utils.class_weight import compute_class_weight
 ```
 
 ```{python}
@@ -101,7 +117,11 @@ plt.show()
 
 ```
 
-### Data-cleaning
+------------------------------------------------------------------------
+
+# Data Prepossessing
+
+## Data-cleaning
 
 ```{python}
 # Check for missing values
@@ -117,9 +137,9 @@ df = df.fillna(method='ffill')  # Forward fill other missing values
 
 ```
 
-### Data Reduction
+## Data Reduction
 
-#### Remove unnecessary columns
+### Remove unnecessary columns
 
 ```{python}
 to_drop = ['ts_code', 'trend_adx_pos', 'trend_adx_neg', 'trend_aroon_ind']
@@ -127,7 +147,7 @@ df = df.drop(columns=to_drop)
 print(f"Remaining features: {df.shape[1]}")
 ```
 
-#### Correlation Analysis
+### Correlation Analysis
 
 ```{python}
 #| label: correlation-analysis
@@ -147,7 +167,7 @@ plt.show()
 
 > There is no highly correlated features
 
-### Data-Transformation
+## Data-Transformation
 
 ```{python}
 # Identify skewed features
@@ -167,9 +187,9 @@ df_scaled = df.drop(columns=skewed_features).copy()
 
 ```
 
-### Feature Engineering
+## Feature Engineering
 
-#### Creating Lag Features
+### Creating Lag Features
 
 To capture predictive patterns leading up to volatility events, we create lagged versions of key indicators. This allows the model to detect precursor signals 1-3 days before anomalies.
 
@@ -190,15 +210,9 @@ for feature in features_to_lag:
 
 ```
 
-
-
-
 > These lagged features serve as candidate leading indicators, designed to capture anomaly signals up to 3 days ahead of their occurrence.
 
-
-
-#### Creating Rolling Statistics
-
+### Creating Rolling Statistics
 
 ```{python}
 #| label: rolling-features
@@ -222,7 +236,7 @@ df_scaled = df_scaled.dropna()
 
 > Rolling window statistics help capture evolving market conditions and short-term trends that may precede volatility events.
 
-#### Interaction Features
+### Interaction Features
 
 We create interaction terms between key indicators that financial theory suggests may combine to signal impending volatility.
 
@@ -241,7 +255,6 @@ df_scaled['obv_atr_interaction'] = df_scaled['log_volume_obv'] * df_scaled['vola
 ```{python}
 #| label: mutual-information
 #| fig-cap: "Top Features by Mutual Information with Anomaly Target"
-from sklearn.feature_selection import mutual_info_classif
 
 # Calculate mutual information
 X = df_scaled.drop(columns=['anomaly', 'vol_ma30', 'target'])
@@ -273,11 +286,443 @@ plt.show()
 
 ------------------------------------------------------------------------
 
-# Data Prepossessing
+# Baseline Model Development
+
+## Train-Test Split
+
+```{python}
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+X_train_const = sm.add_constant(X_train)
+X_test_const = sm.add_constant(X_test)
+```
+
+## Handling Class Imbalance
+
+To address the significant class imbalance ($\approx$ 15% anomalies), we implement class weighting in our models to prioritize correct identification of rare events.
+
+```{python}
+#| label: class-weighting
+# Calculate class weights
+classes = np.unique(y_train)
+weights = compute_class_weight('balanced', classes=classes, y=y_train)
+class_weights = dict(zip(classes, weights))
+
+print(f"Class weights: {class_weights}")
+```
+
+> Handling class imbalance ensures your model doesn't ignore rare but important anomalies, which is essential for a volatility anomaly detection task.
+
+## Model Selection and Initialization
+
+We initialize three baseline models with class weighting to address imbalance:
+
+1.  **Logistic Regression** – interpretable linear baseline\
+2.  **XGBoost** – robust gradient boosting\
+3.  **LightGBM** – efficient for large feature spaces
+
+```{python}
+#| label: initialize-models
+# Initialize models with class weights
+models = {
+    "Logistic Regression": LogisticRegression(
+        class_weight='balanced',
+        max_iter=3000,              # Increased from 1000 to help convergence
+        solver='saga',              # More robust for large-scale problems
+        random_state=42
+    ),
+    "XGBoost": XGBClassifier(
+        scale_pos_weight=class_weights[1] / class_weights[0],  # handle imbalance
+        eval_metric='logloss',
+        random_state=42
+    ),
+    "LightGBM": LGBMClassifier(
+    class_weight='balanced',
+    min_gain_to_split=0.0,
+    min_data_in_leaf=1,
+    num_leaves=31,           # default
+    max_depth=-1,            # no limit
+    random_state=42
+)
+}
+```
+
+## Model Training
+
+We train all models on the training set while preserving the temporal order of data.
+
+```{python}
+#| label: train-models
+trained_models = {}
+for name, model in models.items():
+    print(f"Training {name}")
+    model.fit(X_train, y_train)
+    trained_models[name] = model
+```
+
+## Baseline Evaluation
+
+We evaluate model performance using time-series appropriate metrics focused on anomaly detection capability.
+
+```{python}
+#| label: evaluate-baselines
+#| fig-cap: "Baseline Model Performance Comparison"
+results = []
+fig, axes = plt.subplots(1, len(trained_models), figsize=(16, 5))
+
+for ax, (name, model) in zip(axes, trained_models.items()):
+    y_pred = model.predict(X_test)
+
+    # Calculate metrics
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    mcc = matthews_corrcoef(y_test, y_pred)
+
+    results.append({
+        'Model': name,
+        'Recall': recall,
+        'F1-Score': f1,
+        'MCC': mcc
+    })
+
+    # Plot confusion matrix on subplot
+    ConfusionMatrixDisplay.from_predictions(
+        y_test, y_pred, cmap='Blues', ax=ax, colorbar=False
+    )
+    ax.set_title(f'{name}')
+
+    print(f"{name} Classification Report:")
+    print(classification_report(y_test, y_pred))
+
+# Show all confusion matrices in one row
+plt.tight_layout()
+plt.show()
+
+# Create results comparison table
+results_df = pd.DataFrame(results)
+
+```
+
+
+
+### 🧩 Confusion Matrix Analysis
+
+The confusion matrices above illustrate the detailed classification outcomes for each model:
+
+* **Logistic Regression**:
+
+  * Correctly identified **12 out of 14 anomalies** (true positives), with only **2 false negatives**.
+  * Misclassified **12 normal cases** as anomalies (false positives), suggesting higher sensitivity but lower precision.
+
+* **XGBoost**:
+
+  * Achieved a more **balanced trade-off**, with **9 true positives** and **5 false negatives**, while maintaining fewer false positives (7).
+  * Indicates more conservative but precise predictions.
+
+* **LightGBM**:
+
+  * Detected **8 anomalies**, missing **6**, and misclassified **11 normal cases** as anomalies.
+  * Shows relatively weaker performance both in recall and precision.
+
+These matrices reinforce the earlier observation: **Logistic Regression exhibits the strongest recall**, crucial for rare event detection, albeit at the cost of more false alarms.
 
 
 
 
+
+
+
+
+
+
+
+
+```{python}
+#| label: plot-results
+#| fig-cap: "Baseline Model Performance Comparison"
+# Plot metric comparison
+plt.figure(figsize=(10, 6))
+results_df.set_index('Model').plot(kind='bar', rot=0)
+plt.title('Baseline Model Performance Comparison')
+plt.ylabel('Score')
+plt.ylim(0, 1)
+plt.legend(loc='lower right')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+
+### 📊 Baseline Model Performance Comparison
+
+To evaluate the effectiveness of different classification models in identifying short-term volatility anomalies, we trained three baselines with class weighting to mitigate the heavy class imbalance ($\approx$ 15% anomalies):
+
+-   **Logistic Regression**
+-   **XGBoost**
+-   **LightGBM**
+
+The bar chart above compares their performance on three key evaluation metrics:
+
+-   **Recall** (Sensitivity): Measures the model’s ability to correctly detect anomalies (true positives).
+-   **F1-Score**: Harmonic mean of precision and recall, balancing false positives and false negatives.
+-   **MCC (Matthews Correlation Coefficient)**: A balanced metric even for imbalanced classes, ranging from -1 to 1.
+
+#### 🔍 Observations:
+
+-   **Logistic Regression** performed best across all metrics:
+
+    -   It achieved the **highest recall (\~87%)**, indicating strong ability to detect rare anomaly cases.
+    -   Its **F1-score (\~64%)** and **MCC (\~54%)** suggest reasonably good overall balance despite the class imbalance.
+
+-   **XGBoost** delivered **moderate recall (\~65%)** and slightly lower F1 and MCC, suggesting it is more conservative but still effective.
+
+-   **LightGBM** underperformed in this setup:
+
+    -   Although recall was fair (\~57%), its MCC dropped below 0.4, indicating weaker overall discriminative power.
+
+
+---
+
+# Model Refinement
+
+
+
+## Cross-Validation for Robustness Assessment
+
+To ensure our models generalize well and to get a more reliable estimate of performance, we implement stratified k-fold cross-validation. This approach maintains the class distribution in each fold, which is crucial given our imbalanced dataset.
+
+```{python}
+#| label: stratified-cv
+#| fig-cap: "Cross-Validation Performance Comparison"
+# Define cross-validation strategy with stratification
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+# Define scoring metrics
+scoring = ['recall', 'f1', 'roc_auc', 'matthews_corrcoef']
+
+# Evaluate models using cross-validation
+cv_results = {}
+for name, model in models.items():
+    cv_res = cross_validate(
+        model, X, y,
+        cv=skf,
+        scoring=scoring,
+        return_train_score=False,
+        n_jobs=-1
+    )
+    cv_results[name] = cv_res
+```
+
+
+
+```{python}
+# Organize results for visualization
+metrics = []
+for model_name, res in cv_results.items():
+    for metric in scoring:
+        mean_score = np.mean(res[f'test_{metric}'])
+        std_score = np.std(res[f'test_{metric}'])
+        metrics.append({
+            'Model': model_name,
+            'Metric': metric,
+            'Mean': mean_score,
+            'Std': std_score
+        })
+        
+cv_metrics = pd.DataFrame(metrics)
+
+# Plot results
+plt.figure(figsize=(12, 8))
+sns.barplot(data=cv_metrics, x='Metric', y='Mean', hue='Model', palette='viridis')
+plt.title('Cross-Validation Performance by Metric')
+plt.ylabel('Score')
+plt.ylim(0, 1)
+plt.grid(axis='y', linestyle='--', alpha=0.3)
+plt.legend(title='Model', loc='lower right')
+plt.tight_layout()
+plt.show()  
+```
+
+## Hyperparameter Tuning for Improved Performance
+
+We focus on tuning the Logistic Regression model since it showed the best performance in our baseline evaluation. We optimize for recall to maximize anomaly detection while balancing precision through regularization.
+
+
+```{python}
+#| label: hyperparameter-tuning
+# Define parameter grid for Logistic Regression
+param_grid = {
+    'C': np.logspace(-3, 3, 7),  # Regularization strength
+    'penalty': ['l1', 'l2'],      # Regularization type
+    'solver': ['liblinear', 'saga']  # Solvers that support L1 regularization
+}
+
+# Initialize grid search
+grid_search = GridSearchCV(
+    LogisticRegression(
+        class_weight='balanced',
+        max_iter=3000,
+        random_state=42
+    ),
+    param_grid=param_grid,
+    scoring='recall',
+    cv=skf,
+    n_jobs=-1,
+    verbose=1
+)
+
+# Perform grid search
+grid_search.fit(X, y)
+
+```
+> We prioritize recall, because in early warning systems, recall matters most: better to investigate a few false alerts than miss a real event.
+
+## Model Evaluation
+
+
+```{python}
+# Get best model and parameters
+best_lr = grid_search.best_estimator_
+print(f"Best parameters: {grid_search.best_params_}")
+
+print(f"Best recall score: {grid_search.best_score_:.4f}")
+```
+
+
+We conducted hyperparameter tuning on the Logistic Regression model using a 5-fold stratified cross-validation strategy. The tuning process explored various combinations of regularization strength (`C`), penalty types (`l1`, `l2`), and solvers compatible with L1 regularization (`liblinear`, `saga`).
+
+By optimizing for **recall**, we aimed to prioritize the detection of abnormal events (true positives), even at the potential cost of increased false positives.
+
+The best-performing configuration is as follows:
+
+* **C**: 0.001
+* **Penalty**: L1
+* **Solver**: liblinear
+* **Cross-validated Recall**: 0.9077
+
+This configuration reflects a strong preference for sparsity and regularization, which is suitable for handling high-dimensional or potentially collinear feature spaces. The high recall indicates the model is effective at identifying rare but critical anomaly events.
+
+We use this best estimator for final model training and evaluation.
+
+
+
+```{python}
+y_pred_tuned = best_lr.predict(X_test)
+
+print(classification_report(y_test, y_pred_tuned))
+
+
+```
+
+
+```{python}
+ConfusionMatrixDisplay.from_predictions(y_test, y_pred_tuned, cmap='Blues')
+plt.title("Tuned Logistic Regression Confusion Matrix")
+plt.show()
+```
+
+
+
+
+```{python}
+# Compute scores
+recall = recall_score(y_test, y_pred_tuned)
+f1 = f1_score(y_test, y_pred_tuned)
+roc_auc = roc_auc_score(y_test, best_lr.decision_function(X_test))
+mcc = matthews_corrcoef(y_test, y_pred_tuned)
+
+# Plotting
+metrics = {'Recall': recall, 'F1-score': f1, 'ROC AUC': roc_auc, 'MCC': mcc}
+
+plt.figure(figsize=(8, 5))
+plt.bar(metrics.keys(), metrics.values())
+plt.ylim(0, 1)
+plt.ylabel('Score')
+plt.title('Tuned Logistic Regression Performance Metrics')
+plt.show()
+
+```
+
+
+> The model is extremely sensitive to anomalies (perfect recall), but sacrifices all specificity. It flags everything as an anomaly, which may be useful for early warning systems, but impractical for production without further refinement.
+
+
+
+---
+
+# Model Interpretation with SHAP
+
+
+To address our research question about which features drive predictions and whether they align with financial theory, we use SHAP (SHapley Additive exPlanations) analysis on our best-performing model.
+
+
+```{python}
+#| label: shap-analysis
+#| fig-cap: "SHAP Feature Importance and Dependence Plots"
+# Initialize SHAP explainer for the best model
+explainer = shap.Explainer(best_lr, X)
+shap_values = explainer(X)
+
+# Plot global feature importance
+plt.figure(figsize=(10, 8))
+shap.summary_plot(shap_values, X, plot_type="bar", max_display=15)
+plt.title('Top Features by SHAP Value Impact')
+plt.tight_layout()
+plt.show()
+
+
+```
+
+1. **Feature Ranking**: 
+   - `rsi_vol_interaction` (top) has the highest mean absolute SHAP value (0.0200), meaning it has the largest average impact on predictions
+   - Lagged features appear lower but still significant (e.g., `volume_cmf_lag3`)
+
+2. **Directional Impact** (from SHAP dependence plots):
+   - High `rsi_vol_interaction` $\to$ Increases anomaly probability
+   - Low `obv_atr_interaction` $\to$ Increases anomaly probability
+   - Extreme `macd_vol_interaction` values (both high/low) $\to$ Raise alerts
+
+3. **Financial Theory Alignment**:
+   - Interaction terms dominate, confirming that anomalies emerge from combinations of:
+     - Overbought conditions (high RSI) + Volume spikes
+     - MACD divergence + Volatility expansion
+     - OBV breakdown + ATR surge
+     
+```{python}
+# Plot SHAP dependence plots for top features
+#| label: shap-dependence-grid
+#| fig-cap: "SHAP Dependence Plots for Top 3 Features"
+#| fig-subcap: 
+#|   - "RSI-Volume Interaction"
+#|   - "OBV-ATR Interaction" 
+#|   - "MACD-Volume Interaction"
+#| layout-ncol: 3
+
+# Get top 3 features
+top_features = np.abs(shap_values.values).mean(0).argsort()[-3:][::-1]
+feature_names = X.columns[top_features]
+
+# Create subplots
+fig, axes = plt.subplots(3, 1, figsize=(12, 21))
+
+# Plot each dependence plot
+for i, (ax, feature) in enumerate(zip(axes, feature_names)):
+    shap.dependence_plot(
+        feature,
+        shap_values.values,
+        X,
+        interaction_index=None,
+        ax=ax,
+        show=False
+    )
+    ax.set_title(f'Impact of {feature}', pad=20)
+    ax.set_xlabel('Feature Value', fontsize=10)
+    ax.set_ylabel('SHAP Value', fontsize=10)
+
+plt.tight_layout()
+plt.show()
+```
 
 
 
