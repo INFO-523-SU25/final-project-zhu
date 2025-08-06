@@ -165,7 +165,7 @@ We prioritize: - **Recall**: Minimizing false negatives (missed anomalies)
 ### Baseline Models
 
 | Model | Strengths | Weaknesses |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | **XGBoost** | Handles nonlinear relationships | Requires careful tuning |
 | **LightGBM** | Efficient with large features | Sensitive to outliers |
 | **Logistic Regression** | Interpretable coefficients | Limited nonlinear capacity |
@@ -188,7 +188,7 @@ SHAP analysis is integrated to uncover feature interactions that precede volatil
 
 # 👓 Research Questions
 
--   Q1. Can TA features detect anomalies 1–3 days in advance? Which indicators lead?
+-   Q1. Can TA features predict anomalies 1–3 days into the future? 
 
 -   Q2. Which features drive predictions? Do they align with financial theory?
 
@@ -256,7 +256,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
     -   Precision-recall curves for $\pm$ 3% vs. $\pm$ 5% vs. $\pm$ 7% thresholds
     -   Optimal threshold selection based on trading costs
 2.  **Top Predictive Features**:
-    -   SHAP summary plot of top 10 influential indicators
+    -   SHAP summary plot of top influential indicators
     -   Temporal importance patterns (e.g., volume leads price)
 3.  **Practical Trading Rules**:
     -   Actionable signals like:\
@@ -270,7 +270,7 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 # 📁 Repository Organization
 
 | Folder / File Name | Description |
-|----|----|
+|------------------------------------|------------------------------------|
 | `.quarto/` | Internal Quarto system files; manages cache and config for rendering. Not manually edited. |
 | `_extra/` | Holds supplementary files or artifacts not directly part of deliverables. |
 | `_freeze/` | Stores frozen snapshots of document outputs to ensure reproducibility across builds. |

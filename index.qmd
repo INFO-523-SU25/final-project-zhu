@@ -32,7 +32,7 @@ Predicting sudden shifts in equity price or trading volume is a long-standing ch
 
 # Research Questions
 
--   Q1. Can TA features detect anomalies 1–3 days in advance? Which indicators lead?
+-   Q1. Can TA features predict anomalies 1–3 days into the future? 
 
 -   Q2. Which features drive predictions? Do they align with financial theory?
 
@@ -63,7 +63,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedKFold, cross_validate
 from sklearn.metrics import classification_report, ConfusionMatrixDisplay
 from sklearn.metrics import (
-    roc_auc_score, matthews_corrcoef, f1_score, recall_score
+    roc_auc_score, matthews_corrcoef, f1_score, recall_score, precision_score
 )
 from sklearn.utils.class_weight import compute_class_weight
 ```
@@ -405,39 +405,26 @@ results_df = pd.DataFrame(results)
 
 ```
 
-
-
 ### 🧩 Confusion Matrix Analysis
 
 The confusion matrices above illustrate the detailed classification outcomes for each model:
 
-* **Logistic Regression**:
+-   **Logistic Regression**:
 
-  * Correctly identified **12 out of 14 anomalies** (true positives), with only **2 false negatives**.
-  * Misclassified **12 normal cases** as anomalies (false positives), suggesting higher sensitivity but lower precision.
+    -   Correctly identified **12 out of 14 anomalies** (true positives), with only **2 false negatives**.
+    -   Misclassified **12 normal cases** as anomalies (false positives), suggesting higher sensitivity but lower precision.
 
-* **XGBoost**:
+-   **XGBoost**:
 
-  * Achieved a more **balanced trade-off**, with **9 true positives** and **5 false negatives**, while maintaining fewer false positives (7).
-  * Indicates more conservative but precise predictions.
+    -   Achieved a more **balanced trade-off**, with **9 true positives** and **5 false negatives**, while maintaining fewer false positives (7).
+    -   Indicates more conservative but precise predictions.
 
-* **LightGBM**:
+-   **LightGBM**:
 
-  * Detected **8 anomalies**, missing **6**, and misclassified **11 normal cases** as anomalies.
-  * Shows relatively weaker performance both in recall and precision.
+    -   Detected **8 anomalies**, missing **6**, and misclassified **11 normal cases** as anomalies.
+    -   Shows relatively weaker performance both in recall and precision.
 
 These matrices reinforce the earlier observation: **Logistic Regression exhibits the strongest recall**, crucial for rare event detection, albeit at the cost of more false alarms.
-
-
-
-
-
-
-
-
-
-
-
 
 ```{python}
 #| label: plot-results
@@ -481,12 +468,9 @@ The bar chart above compares their performance on three key evaluation metrics:
 
     -   Although recall was fair (\~57%), its MCC dropped below 0.4, indicating weaker overall discriminative power.
 
-
----
+------------------------------------------------------------------------
 
 # Model Refinement
-
-
 
 ## Cross-Validation for Robustness Assessment
 
@@ -513,8 +497,6 @@ for name, model in models.items():
     )
     cv_results[name] = cv_res
 ```
-
-
 
 ```{python}
 # Organize results for visualization
@@ -548,7 +530,6 @@ plt.show()
 
 We focus on tuning the Logistic Regression model since it showed the best performance in our baseline evaluation. We optimize for recall to maximize anomaly detection while balancing precision through regularization.
 
-
 ```{python}
 #| label: hyperparameter-tuning
 # Define parameter grid for Logistic Regression
@@ -576,10 +557,10 @@ grid_search = GridSearchCV(
 grid_search.fit(X, y)
 
 ```
+
 > We prioritize recall, because in early warning systems, recall matters most: better to investigate a few false alerts than miss a real event.
 
 ## Model Evaluation
-
 
 ```{python}
 # Get best model and parameters
@@ -589,23 +570,20 @@ print(f"Best parameters: {grid_search.best_params_}")
 print(f"Best recall score: {grid_search.best_score_:.4f}")
 ```
 
-
 We conducted hyperparameter tuning on the Logistic Regression model using a 5-fold stratified cross-validation strategy. The tuning process explored various combinations of regularization strength (`C`), penalty types (`l1`, `l2`), and solvers compatible with L1 regularization (`liblinear`, `saga`).
 
 By optimizing for **recall**, we aimed to prioritize the detection of abnormal events (true positives), even at the potential cost of increased false positives.
 
 The best-performing configuration is as follows:
 
-* **C**: 0.001
-* **Penalty**: L1
-* **Solver**: liblinear
-* **Cross-validated Recall**: 0.9077
+-   **C**: 0.001
+-   **Penalty**: L1
+-   **Solver**: liblinear
+-   **Cross-validated Recall**: 0.9077
 
 This configuration reflects a strong preference for sparsity and regularization, which is suitable for handling high-dimensional or potentially collinear feature spaces. The high recall indicates the model is effective at identifying rare but critical anomaly events.
 
 We use this best estimator for final model training and evaluation.
-
-
 
 ```{python}
 y_pred_tuned = best_lr.predict(X_test)
@@ -615,15 +593,11 @@ print(classification_report(y_test, y_pred_tuned))
 
 ```
 
-
 ```{python}
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred_tuned, cmap='Blues')
 plt.title("Tuned Logistic Regression Confusion Matrix")
 plt.show()
 ```
-
-
-
 
 ```{python}
 # Compute scores
@@ -644,18 +618,184 @@ plt.show()
 
 ```
 
-
 > The model is extremely sensitive to anomalies (perfect recall), but sacrifices all specificity. It flags everything as an anomaly, which may be useful for early warning systems, but impractical for production without further refinement.
+
+------------------------------------------------------------------------
+
+
+# Research Questions
+
+Q1. Can TA features predict anomalies 1–3 days into the future? (i.e., Given today's features, can we predict whether anomalies will occur tomorrow, 2 days from now, or 3 days from now?)
+
+```{python}
+df_q1 = df_scaled.copy()
+```
+
+
+## Multi-Horizon Anomaly Prediction
+
+We'll create three separate target variables for anomalies at different horizons:
+
+
+
+```{python}
+#| label: multi-horizon-targets
+# Create horizon-specific targets
+horizons = {
+    'next_day': 1,
+    'day_2': 2, 
+    'day_3': 3
+}
+
+for name, days in horizons.items():
+    df_q1[f'anomaly_{name}'] = df_q1['anomaly'].shift(-days).fillna(0).astype(int)
+    
+print(df_q1[['anomaly', 'anomaly_next_day', 'anomaly_day_2', 'anomaly_day_3']].tail(5))
+
+```
+
+
+
+
+
+## Feature Engineering for Multi-Horizon Prediction
+
+We'll use only current-day features (no future data) to predict future anomalies:
+
+```{python}
+#| label: horizon-features
+# Remove lagged features to prevent lookahead
+X = df_q1.drop(columns=[col for col in df_scaled.columns 
+                          if any(x in col for x in ['lag', 'anomaly'])])
+
+```
+
+
+
+```{python}
+# Create horizon-specific datasets
+horizon_data = {}
+for name in horizons:
+    y = df_q1[f'anomaly_{name}']
+    valid_idx = y.notna()
+    horizon_data[name] = (X[valid_idx], y[valid_idx])
+    
+print(f"Sample sizes: { {k: v[1].shape[0] for k,v in horizon_data.items()} }")
+```
+
+## Model Training and Evaluation
+
+We'll train our best model (Logistic Regression) separately for each horizon:
+
+```{python}
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+X_train_const = sm.add_constant(X_train)
+X_test_const = sm.add_constant(X_test)
+```
+
+
+
+
+```{python}
+
+param_grid = {
+    'C': np.logspace(-3, 2, 6), 
+    'penalty': ['l1', 'l2'],
+    'solver': ['liblinear', 'saga']
+}
+horizon_results = []
+
+
+
+```
+
+
+
+```{python}
+for name, (X_h, y_h) in horizon_data.items():
+    print(f"\n--- Horizon: {name} ---")
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_h, y_h, test_size=0.2, stratify=y_h, random_state=42
+    )
+
+    grid_search = GridSearchCV(
+        estimator=LogisticRegression(class_weight='balanced', max_iter=1000, random_state=42),
+        param_grid=param_grid,
+        scoring='recall',
+        cv=5,
+        n_jobs=1,
+        verbose=0
+    )
+
+    grid_search.fit(X_train, y_train)
+    best_model = grid_search.best_estimator_
+
+    y_pred = best_model.predict(X_test)
+    report = classification_report(y_test, y_pred, output_dict=True)
+
+    print("Best Params:", grid_search.best_params_)
+    print(classification_report(y_test, y_pred))
+
+    horizon_results.append({
+        'Horizon': name,
+        'Best Params': grid_search.best_params_,
+        'Recall': report['1']['recall'],
+        'F1-score': report['1']['f1-score'],
+        'Precision': report['1']['precision'],
+        'Accuracy': report['accuracy']
+    })
+
+
+```
+
+
+```{python}
+
+horizon_df = pd.DataFrame(horizon_results)
+horizon_df
+```
+
+
+## Results Visualization
+
+```{python}
+#| label: horizon-results
+#| fig-cap: "Prediction Performance Across Time Horizons"
+fig, ax1 = plt.subplots(figsize=(10,6))
+
+# Bar plot for metrics
+horizon_results.plot(x='Horizon', y=['Recall', 'Precision'],
+                   kind='bar', ax=ax1, width=0.4, position=1)
+ax1.set_ylabel('Score')
+ax1.set_ylim(0, 1)
+ax1.grid(axis='y', linestyle='--', alpha=0.3)
+
+# Line plot for anomaly rate
+ax2 = ax1.twinx()
+horizon_results.plot(x='Horizon', y='Anomaly Rate', kind='line',
+                   marker='o', color='red', ax=ax2, legend=False)
+ax2.set_ylabel('Anomaly Rate', color='red')
+ax2.tick_params(axis='y', labelcolor='red')
+ax2.set_ylim(0, horizon_results['Anomaly Rate'].max()*1.2)
+
+plt.title('Performance Degradation with Prediction Horizon')
+plt.tight_layout()
+plt.show()
+```
 
 
 
 ---
 
-# Model Interpretation with SHAP
+# Research Question 2
 
+**Which features drive predictions? Do they align with financial theory?**
 
 To address our research question about which features drive predictions and whether they align with financial theory, we use SHAP (SHapley Additive exPlanations) analysis on our best-performing model.
-
 
 ```{python}
 #| label: shap-analysis
@@ -667,62 +807,53 @@ shap_values = explainer(X)
 # Plot global feature importance
 plt.figure(figsize=(10, 8))
 shap.summary_plot(shap_values, X, plot_type="bar", max_display=15)
-plt.title('Top Features by SHAP Value Impact')
-plt.tight_layout()
-plt.show()
 
 
 ```
 
-1. **Feature Ranking**: 
-   - `rsi_vol_interaction` (top) has the highest mean absolute SHAP value (0.0200), meaning it has the largest average impact on predictions
-   - Lagged features appear lower but still significant (e.g., `volume_cmf_lag3`)
+**🔍 SHAP Interpretation: Feature Impact on Anomaly Prediction**
 
-2. **Directional Impact** (from SHAP dependence plots):
-   - High `rsi_vol_interaction` $\to$ Increases anomaly probability
-   - Low `obv_atr_interaction` $\to$ Increases anomaly probability
-   - Extreme `macd_vol_interaction` values (both high/low) $\to$ Raise alerts
+The SHAP summary bar plot above shows the **average contribution** of each feature to the model’s prediction of next-day volatility anomalies, the results highlight a **single dominant driver**:
 
-3. **Financial Theory Alignment**:
-   - Interaction terms dominate, confirming that anomalies emerge from combinations of:
-     - Overbought conditions (high RSI) + Volume spikes
-     - MACD divergence + Volatility expansion
-     - OBV breakdown + ATR surge
-     
+-   **`rsi_vol_interaction`** has the highest mean SHAP value by a large margin, indicating it is the **most influential feature** in the model's decisions. This interaction likely captures momentum combined with volume sensitivity — i.e., extreme RSI values (signaling overbought/oversold conditions) combined with unusually high volume tend to precede volatility spikes.
+
+Other features have **minimal impact** on the model’s output, including:
+
+-   `obv_atr_interaction` and `macd_vol_interaction`: suggesting weak contribution from OBV/ATR-based or MACD/volume-based interactions.
+-   Raw and lagged features (like `momentum_rsi_ma10`, `log_volume_vpt_ma10`) appear, but their mean SHAP values are nearly negligible.
+
+This suggests that the model has **overfit or overly relied** on the `rsi_vol_interaction` feature, possibly due to:
+
+-   Strong correlation between this interaction and anomaly labels, or
+-   Lack of sufficient regularization to balance feature influence.
+
+## Deep Dive: rsi_vol_interaction
+
+To understand why `rsi_vol_interaction` emerged as the most influential feature in our SHAP analysis, we visualized its relationship with the target anomaly label using a boxplot.
+
 ```{python}
-# Plot SHAP dependence plots for top features
-#| label: shap-dependence-grid
-#| fig-cap: "SHAP Dependence Plots for Top 3 Features"
-#| fig-subcap: 
-#|   - "RSI-Volume Interaction"
-#|   - "OBV-ATR Interaction" 
-#|   - "MACD-Volume Interaction"
-#| layout-ncol: 3
-
-# Get top 3 features
-top_features = np.abs(shap_values.values).mean(0).argsort()[-3:][::-1]
-feature_names = X.columns[top_features]
-
-# Create subplots
-fig, axes = plt.subplots(3, 1, figsize=(12, 21))
-
-# Plot each dependence plot
-for i, (ax, feature) in enumerate(zip(axes, feature_names)):
-    shap.dependence_plot(
-        feature,
-        shap_values.values,
-        X,
-        interaction_index=None,
-        ax=ax,
-        show=False
-    )
-    ax.set_title(f'Impact of {feature}', pad=20)
-    ax.set_xlabel('Feature Value', fontsize=10)
-    ax.set_ylabel('SHAP Value', fontsize=10)
-
-plt.tight_layout()
+plt.figure(figsize=(8,5))
+sns.boxplot(x=df_scaled['anomaly'], y=df_scaled['rsi_vol_interaction'])
+plt.title("rsi_vol_interaction vs. Anomaly Label")
+plt.xlabel("Anomaly")
+plt.ylabel("rsi_vol_interaction")
 plt.show()
 ```
 
+To investigate feature importance and alignment with financial theory, we applied SHAP (SHapley Additive exPlanations) analysis to our best-performing logistic regression model. This revealed that the `rsi_vol_interaction` feature—an engineered interaction between Relative Strength Index (RSI) and volume—was by far the most influential predictor.
+
+### Key Observations:
+
+* The **median value of `rsi_vol_interaction` is significantly higher** on anomaly days (`anomaly = 1`) than on non-anomaly days.
+* The **upper quartile and overall spread** are also noticeably elevated for anomalies, suggesting that spikes in RSI combined with high trading volume often precede abnormal events.
+* This pattern **aligns with financial theory**: rapid momentum (high RSI) and surging volume frequently signal strong market sentiment, breakouts, or panic-induced price swings—all of which can manifest as short-term volatility anomalies.
+
+### Implications:
+
+* The interaction feature captures a **meaningful and interpretable market signal**, supporting its use in early warning systems or alert frameworks.
+* However, the feature’s **overwhelming dominance** raises two important concerns:
+
+  * **Feature redundancy**: Other technical indicators might be correlated with this interaction, causing them to be down-weighted or excluded by the model.
+  * **Model sparsity bias**: Our use of L1-regularized logistic regression promotes a sparse feature set, potentially **over-simplifying** the decision boundary by selecting only the strongest signal and suppressing complementary ones.
 
 
