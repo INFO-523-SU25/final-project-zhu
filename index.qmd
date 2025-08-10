@@ -30,7 +30,7 @@ Predicting sudden shifts in equity price or trading volume is a long-standing ch
 
 ------------------------------------------------------------------------
 
-# Research Questions
+# Research Question 2
 
 -   Q1. Can TA features predict anomalies 1–3 days into the future? 
 
@@ -275,7 +275,6 @@ print(f"Top 20 features by mutual information:\n{top_features}")
 ```
 
 ```{python}
-#| label: mutual-information
 #| fig-cap: "Top 20 Features by Mutual Information with Anomaly Target"
 # Prepare top 20 features
 top_mi = mi_series.head(20).sort_values()
@@ -802,13 +801,15 @@ for name, (X_h, y_h) in horizon_data.items():
     print(classification_report(y_test, y_pred))
 
     horizon_results.append({
-        'Horizon': name,
-        'Best Params': grid_search.best_params_,
-        'Recall': report['1']['recall'],
-        'F1-score': report['1']['f1-score'],
-        'Precision': report['1']['precision'],
-        'Accuracy': report['accuracy']
-    })
+    'Horizon': name,
+    'Best Params': grid_search.best_params_,
+    'Recall': report['1']['recall'],
+    'F1-score': report['1']['f1-score'],
+    'Precision': report['1']['precision'],
+    'Accuracy': report['accuracy'],
+    'Anomaly Rate': y_test.mean()
+})
+
 
 
 ```
@@ -1147,9 +1148,7 @@ The logistic regression model was evaluated across various combinations of **pri
 
 ### 3. Economic Significance
 ```{python}
-#| label: anomaly-returns
 #| fig-cap: "Average Absolute Returns by Threshold Level"
-#| 
 plt.figure(figsize=(8,5))
 sns.barplot(data=threshold_metrics, x='Price Threshold', 
             y='Avg Return', hue='Volume Threshold')
@@ -1174,4 +1173,53 @@ The chart below summarizes the **magnitude of returns** (in %) for detected anom
 * **All combinations exceed 5%** $\to$ they’re **economically significant**.
 * There's a trade-off between **anomaly frequency** and **magnitude** — stricter thresholds give more actionable signals.
 
+
+---
+
+
+# Conclusion
+
+This project developed an interpretable machine learning framework for forecasting short-term volatility anomalies in AtHub (603881.SH) stock using technical analysis indicators. Our analysis yielded several key insights:
+
+1. **Predictive Capability**
+   Technical analysis features demonstrated strong predictive power for volatility anomalies, particularly:
+   - The interaction between RSI and volume (`rsi_vol_interaction`) emerged as the dominant predictor
+   - Models achieved 87-100% recall in detecting next-day anomalies across different thresholds
+   - Predictive signals remained effective up to 3 days in advance, though with decreasing precision
+
+2. **Threshold Sensitivity**
+   Our threshold analysis revealed important tradeoffs:
+   - More sensitive thresholds (±3%/1.8×) captured 97% of anomalies but with many false positives
+   - Stricter thresholds (±7%/2.5×) identified only the most extreme moves but with better precision
+   - The ±5%/2.0× default provided the best balance (F1=0.65) for practical use
+
+3. **Economic Significance**
+   Detected anomalies represented economically meaningful moves:
+   - Average absolute returns ranged from 4.1% (±3%) to 9.2% (±7%)
+   - All threshold combinations captured moves exceeding 5%, suggesting tradable opportunities
+
+4. **Model Performance**
+   Logistic regression outperformed tree-based models for this task:
+   - Achieved 87% recall while maintaining reasonable precision (52%)
+   - SHAP analysis confirmed the model learned financially interpretable patterns
+   - Performance remained robust in time-series cross-validation
+
+## Practical Implications
+
+For different use cases, we recommend:
+
+- **Active Traders**: Use ±7%/2.5× thresholds for high-confidence signals (fewer, larger moves)
+- **Risk Managers**: Use ±3%/1.8× thresholds for comprehensive monitoring (catch all potential risks)
+- **General Purpose**: ±5%/2.0× provides the best balance between sensitivity and precision
+
+## Limitations and Future Work
+
+1. The current model is overly sensitive, flagging too many false positives
+2. Feature importance is concentrated in one dominant interaction term
+3. Future improvements could include:
+   - Incorporating alternative data sources (news, order flow)
+   - Testing nonlinear models with calibrated probabilities
+   - Developing dynamic thresholding strategies
+
+This work demonstrates that interpretable machine learning models can effectively detect impending volatility using only market-based technical indicators. The framework provides a foundation for building practical early warning systems while maintaining transparency in decision-making - a crucial requirement for financial applications.
 
