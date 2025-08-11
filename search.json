@@ -130,7 +130,7 @@
     "href": "index.html#model-training",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "Model Training",
-    "text": "Model Training\nWe train all models on the training set while preserving the temporal order of data.\n\n\nTraining Logistic Regression\n\n\nTraining XGBoost\nTraining LightGBM\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Info] Number of positive: 49, number of negative: 219\n[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000367 seconds.\nYou can set `force_row_wise=true` to remove the overhead.\nAnd if memory is not enough, you can set `force_col_wise=true`.\n[LightGBM] [Info] Total Bins 3968\n[LightGBM] [Info] Number of data points in the train set: 268, number of used features: 55\n[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=-0.000000\n[LightGBM] [Info] Start training from score -0.000000\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf"
+    "text": "Model Training\nWe train all models on the training set while preserving the temporal order of data.\n\n\nTraining Logistic Regression\n\n\nTraining XGBoost\nTraining LightGBM\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Info] Number of positive: 49, number of negative: 219\n[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000608 seconds.\nYou can set `force_row_wise=true` to remove the overhead.\nAnd if memory is not enough, you can set `force_col_wise=true`.\n[LightGBM] [Info] Total Bins 3968\n[LightGBM] [Info] Number of data points in the train set: 268, number of used features: 55\n[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=-0.000000\n[LightGBM] [Info] Start training from score -0.000000\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf"
   },
   {
     "objectID": "index.html#baseline-evaluation",
@@ -214,7 +214,7 @@
     "href": "index.html#performance-evaluation",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "Performance Evaluation",
-    "text": "Performance Evaluation\n\n\n\n\n\n\n\n\n\nPrice\nVolume\nRecall\nPrecision\nF1\nAnomaly Rate\n\n\n\n\n0\n3\n1.8\n0.766667\n0.190970\n0.299572\n0.338608\n\n\n1\n3\n2.0\n0.800000\n0.186538\n0.296003\n0.325949\n\n\n2\n3\n2.5\n1.000000\n0.259615\n0.402114\n0.319620\n\n\n3\n5\n1.8\n0.700000\n0.096581\n0.163571\n0.208861\n\n\n4\n5\n2.0\n0.800000\n0.096752\n0.166454\n0.189873\n\n\n5\n5\n2.5\n1.000000\n0.127244\n0.217630\n0.177215\n\n\n6\n7\n1.8\n0.680000\n0.078166\n0.135509\n0.148734\n\n\n7\n7\n2.0\n0.440000\n0.041964\n0.075688\n0.117089\n\n\n8\n7\n2.5\n0.450000\n0.039493\n0.072548\n0.094937"
+    "text": "Performance Evaluation\n\n\n\n\n\n\n\n\n\nPrice\nVolume\nRecall\nPrecision\nF1\nAnomaly Rate\n\n\n\n\n0\n3\n1.8\n0.766667\n0.190970\n0.299572\n0.338608\n\n\n1\n3\n2.0\n0.800000\n0.186538\n0.296003\n0.325949\n\n\n2\n3\n2.5\n0.800000\n0.182692\n0.291003\n0.319620\n\n\n3\n5\n1.8\n0.700000\n0.096581\n0.163571\n0.208861\n\n\n4\n5\n2.0\n1.000000\n0.135214\n0.230970\n0.189873\n\n\n5\n5\n2.5\n1.000000\n0.127244\n0.217630\n0.177215\n\n\n6\n7\n1.8\n0.680000\n0.078166\n0.135509\n0.148734\n\n\n7\n7\n2.0\n0.440000\n0.041964\n0.075688\n0.117089\n\n\n8\n7\n2.5\n0.450000\n0.039493\n0.072548\n0.094937"
   },
   {
     "objectID": "index.html#visualization",
@@ -259,66 +259,10 @@
     "text": "Project Overview\nThis project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock AtHub (603881.SH)—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators.\nWe define anomalies as:\n\nPrice spikes or crashes: Daily returns exceeding $$5%.\nVolume surges: Daily trading volume exceeding 2× the 30-day moving average.\n\nBy engineering over 30 TA-based features (momentum, trend, volume, and volatility), we aim to identify leading patterns that consistently precede such events.\n\n\n\nApproach Summary\n\nData Collection: Daily OHLCV data for AtHub over a multi-year period.\nFeature Engineering: Over 30 technical indicators computed using rolling windows.\nModeling: Supervised learning for anomaly classification (binary targets).\nEvaluation: Time-aware cross-validation to preserve chronological integrity.\nInterpretation: SHAP analysis to understand key feature interactions.\n\n\n\n\nContributors\nThis project was developed by\n\nAnnabelle Zhu, Project Author\nDr. Greg Chism, Professor of INFO 523."
   },
   {
-    "objectID": "presentation.html#quarto",
-    "href": "presentation.html#quarto",
-    "title": "Project title",
-    "section": "Quarto",
-    "text": "Quarto\n\nThe presentation is created using the Quarto CLI\n## sets the start of a new slide"
-  },
-  {
-    "objectID": "presentation.html#layouts",
-    "href": "presentation.html#layouts",
-    "title": "Project title",
-    "section": "Layouts",
-    "text": "Layouts\nYou can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\nlike\nthis\n\nAnd add footnotes"
-  },
-  {
-    "objectID": "presentation.html#code",
-    "href": "presentation.html#code",
-    "title": "Project title",
-    "section": "Code",
-    "text": "Code\n\n\n                            OLS Regression Results                            \n==============================================================================\nDep. Variable:                    mpg   R-squared:                       0.073\nModel:                            OLS   Adj. R-squared:                  0.070\nMethod:                 Least Squares   F-statistic:                     30.59\nDate:                Sun, 03 Aug 2025   Prob (F-statistic):           5.84e-08\nTime:                        11:57:20   Log-Likelihood:                -1346.4\nNo. Observations:                 392   AIC:                             2697.\nDf Residuals:                     390   BIC:                             2705.\nDf Model:                           1                                         \nCovariance Type:            nonrobust                                         \n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nconst         35.8015      2.266     15.800      0.000      31.347      40.257\nspeed       -354.7055     64.129     -5.531      0.000    -480.788    -228.623\n==============================================================================\nOmnibus:                       27.687   Durbin-Watson:                   0.589\nProb(Omnibus):                  0.000   Jarque-Bera (JB):               18.976\nSkew:                           0.420   Prob(JB):                     7.57e-05\nKurtosis:                       2.323   Cond. No.                         169.\n==============================================================================\n\nNotes:\n[1] Standard Errors assume that the covariance matrix of the errors is correctly specified."
-  },
-  {
-    "objectID": "presentation.html#plots",
-    "href": "presentation.html#plots",
-    "title": "Project title",
-    "section": "Plots",
-    "text": "Plots"
-  },
-  {
-    "objectID": "presentation.html#plot-and-text",
-    "href": "presentation.html#plot-and-text",
-    "title": "Project title",
-    "section": "Plot and text",
-    "text": "Plot and text\n\n\n\nSome text\ngoes here"
-  },
-  {
-    "objectID": "presentation.html#tables",
-    "href": "presentation.html#tables",
-    "title": "Project title",
-    "section": "Tables",
-    "text": "Tables\nIf you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,\n\n\n\n\n\n\n\n\n\n\n\n\nspecies\n\n\n\nisland\n\n\n\nbill_length_mm\n\n\n\nbill_depth_mm\n\n\n\nflipper_length_mm\n\n\n\nbody_mass_g\n\n\n\nsex\n\n\n\n\n\n\n\n\n\n\n\n0\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.1\n\n\n\n18.7\n\n\n\n181.0\n\n\n\n3750.0\n\n\n\nMale\n\n\n\n\n\n\n\n1\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.5\n\n\n\n17.4\n\n\n\n186.0\n\n\n\n3800.0\n\n\n\nFemale\n\n\n\n\n\n\n\n2\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n40.3\n\n\n\n18.0\n\n\n\n195.0\n\n\n\n3250.0\n\n\n\nFemale\n\n\n\n\n\n\n\n4\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n36.7\n\n\n\n19.3\n\n\n\n193.0\n\n\n\n3450.0\n\n\n\nFemale\n\n\n\n\n\n\n\n5\n\n\n\nAdelie\n\n\n\nTorgersen\n\n\n\n39.3\n\n\n\n20.6\n\n\n\n190.0\n\n\n\n3650.0\n\n\n\nMale"
-  },
-  {
-    "objectID": "presentation.html#images",
-    "href": "presentation.html#images",
-    "title": "Project title",
-    "section": "Images",
-    "text": "Images\n\nImage credit: Danielle Navarro, Percolate."
-  },
-  {
-    "objectID": "presentation.html#math-expressions",
-    "href": "presentation.html#math-expressions",
-    "title": "Project title",
-    "section": "Math Expressions",
-    "text": "Math Expressions\nYou can write LaTeX math expressions inside a pair of dollar signs, e.g. $\\alpha+\\beta$ renders \\(\\alpha + \\beta\\). You can use the display style with double dollar signs:\n$$\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i$$\n\\[\n\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i\n\\]\nLimitations:\n\nThe source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting $$ must appear in the very beginning of a line, followed immediately by a non-space character, and the ending $$ must be at the end of a line, led by a non-space character;\nThere should not be spaces after the opening $ or before the closing $."
-  },
-  {
-    "objectID": "presentation.html#feeling-adventurous",
-    "href": "presentation.html#feeling-adventurous",
-    "title": "Project title",
-    "section": "Feeling adventurous?",
-    "text": "Feeling adventurous?\n\nYou are welcomed to use the default styling of the slides. In fact, that’s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.\nBut some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs."
+    "objectID": "presentation.html#athub-603881.sh-case-study",
+    "href": "presentation.html#athub-603881.sh-case-study",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "AtHub (603881.SH) Case Study",
+    "text": "AtHub (603881.SH) Case Study\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n- Binary classification of next-day anomalies\n- 30+ engineered technical features\n- Interpretable ML with SHAP analysis\n\n\n\n\nShanghai Stock Exchange\n\n\n\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
   }
 ]

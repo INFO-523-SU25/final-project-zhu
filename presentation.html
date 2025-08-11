@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Annabelle Zhu">
-  <title>Forecasting Anomalies in AtHub’s Stock Behavior – Project title</title>
+  <title>Forecasting Anomalies in AtHub’s Stock Behavior – Forecasting Anomalies in AtHub’s Stock Behavior</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-eb4000eda38d16afee52bf045ed8c11d.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-9fca036ac4f8a9d681364aea7c148d97.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -128,7 +128,7 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="images/watercolour_sys02_img34_teacup-ocean.jpg" data-background-opacity="0.7" data-background-size="stretch" data-slide-number="none" class="quarto-title-block center">
-  <h1 class="title">Project title</h1>
+  <h1 class="title">Forecasting Anomalies in AtHub’s Stock Behavior</h1>
   <p class="subtitle">INFO 523 - Summer 2025 - Final Project</p>
 
 <div class="quarto-title-authors">
@@ -141,364 +141,273 @@ Annabelle Zhu
 
 </section>
 <section>
-<section id="using-quarto-for-presentations" class="title-slide slide level1 center">
-<h1>Using Quarto for presentations</h1>
+<section id="market-anomaly-forecasting" class="title-slide slide level1 center">
+<h1>Market Anomaly Forecasting</h1>
 
 </section>
-<section id="quarto" class="slide level2">
-<h2>Quarto</h2>
-<ul>
-<li><p>The presentation is created using the Quarto CLI</p></li>
-<li><p><code>##</code> sets the start of a new slide</p></li>
-</ul>
-</section>
-<section id="layouts" class="slide level2">
-<h2>Layouts</h2>
-<p>You can use plain text</p>
+<section id="athub-603881.sh-case-study" class="slide level2">
+<h2>AtHub (603881.SH) Case Study</h2>
 <div class="columns">
-<div class="column" style="width:40%;">
-<ul>
-<li>or bullet points<sup>1</sup></li>
-</ul>
-</div><div class="column" style="width:60%;">
-<p>or in two columns</p>
-</div></div>
-<ul>
-<li><p>like</p></li>
-<li><p>this</p></li>
-</ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>And add footnotes</p></li></ol></aside></section>
-<section id="code" class="slide level2">
-<h2>Code</h2>
-<div id="909139cf" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-stdout">
-<pre><code>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:                    mpg   R-squared:                       0.073
-Model:                            OLS   Adj. R-squared:                  0.070
-Method:                 Least Squares   F-statistic:                     30.59
-Date:                Sun, 03 Aug 2025   Prob (F-statistic):           5.84e-08
-Time:                        11:57:20   Log-Likelihood:                -1346.4
-No. Observations:                 392   AIC:                             2697.
-Df Residuals:                     390   BIC:                             2705.
-Df Model:                           1                                         
-Covariance Type:            nonrobust                                         
-==============================================================================
-                 coef    std err          t      P&gt;|t|      [0.025      0.975]
-------------------------------------------------------------------------------
-const         35.8015      2.266     15.800      0.000      31.347      40.257
-speed       -354.7055     64.129     -5.531      0.000    -480.788    -228.623
-==============================================================================
-Omnibus:                       27.687   Durbin-Watson:                   0.589
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):               18.976
-Skew:                           0.420   Prob(JB):                     7.57e-05
-Kurtosis:                       2.323   Cond. No.                         169.
-==============================================================================
-
-Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
-</div>
-</div>
-</section>
-<section id="plots" class="slide level2">
-<h2>Plots</h2>
-
-<img data-src="presentation_files/figure-revealjs/cell-6-output-1.png" class="r-stretch"></section>
-<section id="plot-and-text" class="slide level2">
-<h2>Plot and text</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li><p>Some text</p></li>
-<li><p>goes here</p></li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div id="f44235d0" class="cell" data-fig.width="5.5" data-execution_count="6">
-<div class="cell-output cell-output-display">
-<div>
+<div class="column" style="width:60%;">
+<p><strong>Project Focus</strong><br>
+Predicting abnormal volatility (±5% price or 2× volume) using technical indicators</p>
+<p><strong>Core Approach</strong><br>
+- Binary classification of next-day anomalies<br>
+- 30+ engineered technical features<br>
+- Interpretable ML with SHAP analysis</p>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="presentation_files/figure-revealjs/cell-7-output-1.png"></p>
+<p><img data-src="images/shanghai-stock-exchange.jpeg" width="400"></p>
+<figcaption>Shanghai Stock Exchange</figcaption>
 </figure>
 </div>
+</div></div>
+<aside class="notes">
+<p>This project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="research-questions" class="title-slide slide level1 center">
+<h1>Research Questions</h1>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
+<div class="callout-title-container flex-fill">
+Q1. Prediction Horizon
+</div>
+</div>
+<div class="callout-body-container callout-body">
+Can TA features predict anomalies 1-3 days ahead?
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Q2. Feature Significance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+Which features drive predictions? Do they align with financial theory?
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Q3. Threshold Sensitivity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+How do anomaly thresholds impact model performance?
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/technical-analysis.png" width="400"></p>
+<figcaption>Technical Analysis Indicators</figcaption>
+</figure>
 </div>
 </div></div>
+<aside class="notes">
+<p>We address three core research questions about prediction horizons, feature significance, and threshold sensitivity for anomaly detection in high-volatility stocks.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
 </section></section>
 <section>
-<section id="a-new-section" class="title-slide slide level1 center">
-<h1>A new section…</h1>
+<section id="key-findings-prediction-horizons" class="title-slide slide level1 center">
+<h1>Key Findings: Prediction Horizons</h1>
 
+<img data-src="presentation_files/figure-revealjs/horizon-chart-output-1.png" class="r-stretch quarto-figure-center" id="horizon-chart"><p class="caption">Anomaly Prediction Performance Over Next 3 Days</p><aside class="notes">
+<p>Models achieve perfect recall across all horizons but with low precision (19%). TA features contain predictive signals but require refinement to reduce false positives.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="tables" class="slide level2">
-<h2>Tables</h2>
-<p>If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,</p>
-<div id="12960e0c" class="cell" data-execution_count="7">
-<div class="cell-output cell-output-display" data-execution_count="7">
-<table border="1" class="dataframe">
+<section class="slide level2">
 
-<thead>
-
-<tr style="text-align: right;">
-
-<th>
-</th>
-
-<th>
-species
-</th>
-
-<th>
-island
-</th>
-
-<th>
-bill_length_mm
-</th>
-
-<th>
-bill_depth_mm
-</th>
-
-<th>
-flipper_length_mm
-</th>
-
-<th>
-body_mass_g
-</th>
-
-<th>
-sex
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<th>
-0
-</th>
-
-<td>
-Adelie
-</td>
-
-<td>
-Torgersen
-</td>
-
-<td>
-39.1
-</td>
-
-<td>
-18.7
-</td>
-
-<td>
-181.0
-</td>
-
-<td>
-3750.0
-</td>
-
-<td>
-Male
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-1
-</th>
-
-<td>
-Adelie
-</td>
-
-<td>
-Torgersen
-</td>
-
-<td>
-39.5
-</td>
-
-<td>
-17.4
-</td>
-
-<td>
-186.0
-</td>
-
-<td>
-3800.0
-</td>
-
-<td>
-Female
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-2
-</th>
-
-<td>
-Adelie
-</td>
-
-<td>
-Torgersen
-</td>
-
-<td>
-40.3
-</td>
-
-<td>
-18.0
-</td>
-
-<td>
-195.0
-</td>
-
-<td>
-3250.0
-</td>
-
-<td>
-Female
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-4
-</th>
-
-<td>
-Adelie
-</td>
-
-<td>
-Torgersen
-</td>
-
-<td>
-36.7
-</td>
-
-<td>
-19.3
-</td>
-
-<td>
-193.0
-</td>
-
-<td>
-3450.0
-</td>
-
-<td>
-Female
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-5
-</th>
-
-<td>
-Adelie
-</td>
-
-<td>
-Torgersen
-</td>
-
-<td>
-39.3
-</td>
-
-<td>
-20.6
-</td>
-
-<td>
-190.0
-</td>
-
-<td>
-3650.0
-</td>
-
-<td>
-Male
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-</div>
-</div>
-</section>
-<section id="images" class="slide level2">
-<h2>Images</h2>
-
-<img data-src="images/watercolour_sys02_img34_teacup-ocean.png" width="500" class="r-stretch quarto-figure-center"><p class="caption">Image credit: Danielle Navarro, Percolate.</p></section>
-<section id="math-expressions" class="slide level2 smaller">
-<h2>Math Expressions</h2>
-<p>You can write LaTeX math expressions inside a pair of dollar signs, e.g.&nbsp;$\alpha+\beta$ renders <span class="math inline">\(\alpha + \beta\)</span>. You can use the display style with double dollar signs:</p>
-<pre><code>$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$</code></pre>
-<p><span class="math display">\[
-\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i
-\]</span></p>
-<p>Limitations:</p>
-<ol type="1">
-<li><p>The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting <code>$$</code> must appear in the very beginning of a line, followed immediately by a non-space character, and the ending <code>$$</code> must be at the end of a line, led by a non-space character;</p></li>
-<li><p>There should not be spaces after the opening <code>$</code> or before the closing <code>$</code>.</p></li>
-</ol>
 </section></section>
 <section>
-<section id="wrap-up" class="title-slide slide level1 center">
-<h1>Wrap up</h1>
+<section id="feature-significance-shap-analysis" class="title-slide slide level1 center">
+<h1>Feature Significance: SHAP Analysis</h1>
 
+<img data-src="presentation_files/figure-revealjs/shap-plot-output-1.png" class="r-stretch quarto-figure-center" id="shap-plot"><p class="caption">Dominant Feature: RSI-Volume Interaction</p><aside class="notes">
+<p>RSI-Volume interaction dominates predictions, aligning with financial theory that momentum + volume surges signal volatility. Model oversimplifies by relying primarily on one feature.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="feeling-adventurous" class="slide level2">
-<h2>Feeling adventurous?</h2>
-<ul>
-<li><p>You are welcomed to use the default styling of the slides. In fact, that’s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.</p></li>
-<li><p>But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.</p></li>
-</ul>
-
+<section class="slide level2">
 
 </section></section>
+<section>
+<section id="threshold-sensitivity-analysis" class="title-slide slide level1 center">
+<h1>Threshold Sensitivity Analysis</h1>
 
+<img data-src="presentation_files/figure-revealjs/threshold-chart-output-1.png" class="r-stretch quarto-figure-center" id="threshold-chart"><p class="caption">Optimal Threshold: ±3% Price &amp; 1.8× Volume</p><aside class="notes">
+<p>±3% price change + 1.8× volume delivers best F1 (0.41) with 97% recall. Higher thresholds reduce false positives but miss important signals.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="economic-significance" class="title-slide slide level1 center">
+<h1>Economic Significance</h1>
+
+<img data-src="presentation_files/figure-revealjs/returns-chart-output-1.png" class="r-stretch quarto-figure-center" id="returns-chart"><p class="caption">Average Returns by Threshold Level</p><aside class="notes">
+<p>All thresholds identify economically significant moves (&gt;5% returns). Stricter thresholds capture larger but rarer anomalies.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="practical-applications" class="title-slide slide level1 center">
+<h1>Practical Applications</h1>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Trading Strategies</strong><br>
+- ±7% threshold for high-conviction trades<br>
+- Position sizing based on SHAP values</p>
+<p><strong>Risk Management</strong><br>
+- ±3% threshold for stop-loss triggers<br>
+- Real-time monitoring of RSI-volume spikes</p>
+<p><strong>Portfolio Protection</strong><br>
+- Anomaly alerts for hedging decisions<br>
+- Volatility forecasting for option pricing</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/trading-dashboard.png" width="450"></p>
+<figcaption>Trading Dashboard Concept</figcaption>
+</figure>
+</div>
+</div></div>
+<aside class="notes">
+<p>The framework provides actionable insights for traders, risk managers, and portfolio constructors, with threshold selection depending on use case requirements.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section id="conclusion-future-work" class="title-slide slide level1 center">
+<h1>Conclusion &amp; Future Work</h1>
+<p><strong>Key Contributions</strong><br>
+✅ Demonstrated predictive power of TA features for volatility anomalies<br>
+✅ Identified RSI-volume interaction as dominant predictor<br>
+✅ Established optimal threshold combinations for different use cases</p>
+<p><strong>Limitations &amp; Next Steps</strong><br>
+- Develop precision-focused models to reduce false positives<br>
+- Incorporate alternative data sources (news, sentiment)<br>
+- Test dynamic thresholding approaches<br>
+- Expand to sector-wide anomaly detection</p>
+<center>
+<img src="images/future-work.png" width="500px">
+</center>
+<aside class="notes">
+<p>This work establishes a foundation for interpretable anomaly detection in high-volatility stocks, with promising extensions to real-time trading systems.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p>```</p>
+
+
+</section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="images/stock-market.png" class="slide-logo"></p>
 <div class="footer footer-default">
-
+<p>INFO 523 Final Project | Annabelle Zhu</p>
 </div>
 </div></div>
 
@@ -551,7 +460,7 @@ Male
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: 'c/t',
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -656,7 +565,7 @@ Male
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'fade',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
