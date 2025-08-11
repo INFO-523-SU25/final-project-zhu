@@ -3,13 +3,15 @@ title: "Forecasting Anomalies in AtHub's Stock Behavior"
 subtitle: "INFO 523 - Summer 2025 - Final Project"
 author: "Annabelle Zhu"
 title-slide-attributes:
-  data-background-image: images/watercolour_sys02_img34_teacup-ocean.jpg
+  data-background-image: images/close-up-of-stock.jpg
   data-background-size: stretch
   data-background-opacity: "0.7"
   data-slide-number: none
+  class: my-title-slide
 format:
   revealjs:
     theme:  ['style/customtheming.scss']
+    css: style/title-slide.css
     logo: images/stock-market.png
     footer: "INFO 523 Final Project | Annabelle Zhu"
     transition: fade
@@ -52,36 +54,38 @@ mtcars['speed'] = mtcars['horsepower'] / mtcars['weight']
 penguins = sns.load_dataset('penguins').dropna()
 ```
 
-
 # Market Anomaly Forecasting
 
 ## AtHub (603881.SH) Case Study
 
-:::::: columns
+::::: columns
 ::: {.column width="60%"}
-**Project Focus**  
+**Project Focus**\
 Predicting abnormal volatility (±5% price or 2× volume) using technical indicators
 
-**Core Approach**  
-- Binary classification of next-day anomalies  
-- 30+ engineered technical features  
-- Interpretable ML with SHAP analysis  
+**Core Approach**
+
+-   Binary classification of next-day anomalies
+
+-   30+ engineered technical features
+
+-   Interpretable ML with SHAP analysis
 :::
 
 ::: {.column width="40%"}
-![Shanghai Stock Exchange](images/shanghai-stock-exchange.jpeg){width=400px}
+![](images/shanghai-stock-exchange.jpeg){width="622"}
 :::
-::::::
+:::::
 
 ::: notes
 This project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements.
 :::
 
----
+------------------------------------------------------------------------
 
 # Research Questions
 
-:::::: columns
+::::: columns
 ::: {.column width="50%"}
 ```{=html}
 <div class="callout callout-style-default callout-note callout-titled">
@@ -133,15 +137,15 @@ How do anomaly thresholds impact model performance?
 </div>
 ```
 
-![Technical Analysis Indicators](images/technical-analysis.png){width=400px}
+![Technical Analysis Indicators](images/technical-analysis.jfif){width="380"}
 :::
-::::::
+:::::
 
 ::: notes
 We address three core research questions about prediction horizons, feature significance, and threshold sensitivity for anomaly detection in high-volatility stocks.
 :::
 
----
+------------------------------------------------------------------------
 
 # Key Findings: Prediction Horizons
 
@@ -180,7 +184,7 @@ plt.show()
 Models achieve perfect recall across all horizons but with low precision (19%). TA features contain predictive signals but require refinement to reduce false positives.
 :::
 
----
+------------------------------------------------------------------------
 
 # Feature Significance: SHAP Analysis
 
@@ -206,7 +210,7 @@ plt.show()
 RSI-Volume interaction dominates predictions, aligning with financial theory that momentum + volume surges signal volatility. Model oversimplifies by relying primarily on one feature.
 :::
 
----
+------------------------------------------------------------------------
 
 # Threshold Sensitivity Analysis
 
@@ -235,7 +239,7 @@ plt.show()
 ±3% price change + 1.8× volume delivers best F1 (0.41) with 97% recall. Higher thresholds reduce false positives but miss important signals.
 :::
 
----
+------------------------------------------------------------------------
 
 # Economic Significance
 
@@ -259,51 +263,64 @@ plt.show()
 ```
 
 ::: notes
-All thresholds identify economically significant moves (>5% returns). Stricter thresholds capture larger but rarer anomalies.
+All thresholds identify economically significant moves (\>5% returns). Stricter thresholds capture larger but rarer anomalies.
 :::
 
----
+------------------------------------------------------------------------
 
 # Practical Applications
 
-:::::: columns
+::::: columns
 ::: {.column width="50%"}
-**Trading Strategies**  
-- ±7% threshold for high-conviction trades  
-- Position sizing based on SHAP values  
+**Trading Strategies**
 
-**Risk Management**  
-- ±3% threshold for stop-loss triggers  
-- Real-time monitoring of RSI-volume spikes  
+-   ±7% threshold for high-conviction trades
 
-**Portfolio Protection**  
-- Anomaly alerts for hedging decisions  
-- Volatility forecasting for option pricing  
+-   Position sizing based on SHAP values
+
+**Risk Management**
+
+-   ±3% threshold for stop-loss triggers
+
+-   Real-time monitoring of RSI-volume spikes
+
+**Portfolio Protection**
+
+-   Anomaly alerts for hedging decisions
+
+-   Volatility forecasting for option pricing
 :::
 
 ::: {.column width="50%"}
-![Trading Dashboard Concept](images/trading-dashboard.png){width=450px}
+![Trading Dashboard Concept](images/trading-dashboard.png){width="450px"}
 :::
-::::::
+:::::
 
 ::: notes
 The framework provides actionable insights for traders, risk managers, and portfolio constructors, with threshold selection depending on use case requirements.
 :::
 
----
+------------------------------------------------------------------------
 
 # Conclusion & Future Work
 
-**Key Contributions**  
-✅ Demonstrated predictive power of TA features for volatility anomalies  
-✅ Identified RSI-volume interaction as dominant predictor  
-✅ Established optimal threshold combinations for different use cases  
+**Key Contributions**
+✅ Demonstrated predictive power of TA features for volatility anomalies\
+✅ Identified RSI-volume interaction as dominant predictor\
+✅ Established optimal threshold combinations for different use cases
 
-**Limitations & Next Steps**  
-- Develop precision-focused models to reduce false positives  
-- Incorporate alternative data sources (news, sentiment)  
-- Test dynamic thresholding approaches  
-- Expand to sector-wide anomaly detection  
+---
+
+
+**Limitations & Next Steps**
+
+-   Develop precision-focused models to reduce false positives
+
+-    Incorporate alternative data sources (news, sentiment)
+
+-   Test dynamic thresholding approaches
+
+-   Expand to sector-wide anomaly detection
 
 ```{=html}
 <center>
@@ -314,4 +331,4 @@ The framework provides actionable insights for traders, risk managers, and portf
 ::: notes
 This work establishes a foundation for interpretable anomaly detection in high-volatility stocks, with promising extensions to real-time trading systems.
 :::
-```
+
