@@ -12,7 +12,7 @@ format:
   revealjs:
     theme:  ['style/customtheming.scss']
     css: style/title-slide.css
-    logo: images/stock-market.png
+    logo: images/favicon.png
     footer: "INFO 523 Final Project | Annabelle Zhu"
     transition: fade
     slide-number: true
@@ -88,15 +88,15 @@ This project develops an early warning system for volatility anomalies in AtHub 
 ::::: columns
 ::: {.column width="50%"}
 ```{=html}
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note p-2 callout-titled">
+
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon"></i> Q1. Prediction Horizon
 </div>
-<div class="callout-title-container flex-fill">
-Q1. Prediction Horizon
+
 </div>
-</div>
+
 <div class="callout-body-container callout-body">
 Can TA features predict anomalies 1-3 days ahead?
 </div>
@@ -104,13 +104,10 @@ Can TA features predict anomalies 1-3 days ahead?
 ```
 
 ```{=html}
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note p-2 callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Q2. Feature Significance
+<i class="callout-icon"></i>Q2. Feature Significance
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -122,13 +119,10 @@ Which features drive predictions? Do they align with financial theory?
 
 ::: {.column width="50%"}
 ```{=html}
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default p-2 callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Q3. Threshold Sensitivity
+<i class="callout-icon"></i>Q3. Threshold Sensitivity
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -137,7 +131,7 @@ How do anomaly thresholds impact model performance?
 </div>
 ```
 
-![Technical Analysis Indicators](images/technical-analysis.jfif){width="380"}
+![](images/technical-analysis.jfif){width="333"}
 :::
 :::::
 
@@ -271,52 +265,49 @@ All thresholds identify economically significant moves (\>5% returns). Stricter 
 # Practical Applications
 
 ::::: columns
-::: {.column width="50%"}
+::: {.column width="80%"}
 **Trading Strategies**
 
 -   ±7% threshold for high-conviction trades
-
 -   Position sizing based on SHAP values
+:::
 
+::: {.column width="50%"}
+![](images/trading-dashboard.png){width="450px"}
+:::
+:::::
+
+------------------------------------------------------------------------
+
+:::: columns
+::: {.column width="80%"}
 **Risk Management**
 
 -   ±3% threshold for stop-loss triggers
-
 -   Real-time monitoring of RSI-volume spikes
 
 **Portfolio Protection**
 
 -   Anomaly alerts for hedging decisions
-
 -   Volatility forecasting for option pricing
 :::
-
-::: {.column width="50%"}
-![Trading Dashboard Concept](images/trading-dashboard.png){width="450px"}
-:::
-:::::
-
-::: notes
-The framework provides actionable insights for traders, risk managers, and portfolio constructors, with threshold selection depending on use case requirements.
-:::
+::::
 
 ------------------------------------------------------------------------
 
 # Conclusion & Future Work
 
-**Key Contributions**
-✅ Demonstrated predictive power of TA features for volatility anomalies\
+**Key Contributions** ✅ Demonstrated predictive power of TA features for volatility anomalies\
 ✅ Identified RSI-volume interaction as dominant predictor\
 ✅ Established optimal threshold combinations for different use cases
 
----
-
+------------------------------------------------------------------------
 
 **Limitations & Next Steps**
 
 -   Develop precision-focused models to reduce false positives
 
--    Incorporate alternative data sources (news, sentiment)
+-   Incorporate alternative data sources (news, sentiment)
 
 -   Test dynamic thresholding approaches
 
@@ -331,4 +322,3 @@ The framework provides actionable insights for traders, risk managers, and portf
 ::: notes
 This work establishes a foundation for interpretable anomaly detection in high-volatility stocks, with promising extensions to real-time trading systems.
 :::
-
