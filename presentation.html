@@ -31,6 +31,7 @@
     }
   </style>
   <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-9fca036ac4f8a9d681364aea7c148d97.css">
+  <link rel="stylesheet" href="style/title-slide.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -127,7 +128,7 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" data-background-image="images/watercolour_sys02_img34_teacup-ocean.jpg" data-background-opacity="0.7" data-background-size="stretch" data-slide-number="none" class="quarto-title-block center">
+<section id="title-slide" class="my-title-slide center" data-background-image="images/close-up-of-stock.jpg" data-background-opacity="0.7" data-background-size="stretch" data-slide-number="none">
   <h1 class="title">Forecasting Anomalies in AtHub’s Stock Behavior</h1>
   <p class="subtitle">INFO 523 - Summer 2025 - Final Project</p>
 
@@ -151,17 +152,14 @@ Annabelle Zhu
 <div class="column" style="width:60%;">
 <p><strong>Project Focus</strong><br>
 Predicting abnormal volatility (±5% price or 2× volume) using technical indicators</p>
-<p><strong>Core Approach</strong><br>
-- Binary classification of next-day anomalies<br>
-- 30+ engineered technical features<br>
-- Interpretable ML with SHAP analysis</p>
+<p><strong>Core Approach</strong></p>
+<ul>
+<li><p>Binary classification of next-day anomalies</p></li>
+<li><p>30+ engineered technical features</p></li>
+<li><p>Interpretable ML with SHAP analysis</p></li>
+</ul>
 </div><div class="column" style="width:40%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/shanghai-stock-exchange.jpeg" width="400"></p>
-<figcaption>Shanghai Stock Exchange</figcaption>
-</figure>
-</div>
+<p><img data-src="images/shanghai-stock-exchange.jpeg" width="622"></p>
 </div></div>
 <aside class="notes">
 <p>This project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements.</p>
@@ -185,26 +183,23 @@ Predicting abnormal volatility (±5% price or 2× volume) using technical indica
 <h1>Research Questions</h1>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note p-2 callout-titled">
+
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon"></i> Q1. Prediction Horizon
 </div>
-<div class="callout-title-container flex-fill">
-Q1. Prediction Horizon
+
 </div>
-</div>
+
 <div class="callout-body-container callout-body">
 Can TA features predict anomalies 1-3 days ahead?
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note p-2 callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Q2. Feature Significance
+<i class="callout-icon"></i>Q2. Feature Significance
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -212,25 +207,17 @@ Which features drive predictions? Do they align with financial theory?
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default p-2 callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Q3. Threshold Sensitivity
+<i class="callout-icon"></i>Q3. Threshold Sensitivity
 </div>
 </div>
 <div class="callout-body-container callout-body">
 How do anomaly thresholds impact model performance?
 </div>
 </div>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/technical-analysis.png" width="400"></p>
-<figcaption>Technical Analysis Indicators</figcaption>
-</figure>
-</div>
+<p><img data-src="images/technical-analysis.jfif" width="333"></p>
 </div></div>
 <aside class="notes">
 <p>We address three core research questions about prediction horizons, feature significance, and threshold sensitivity for anomaly detection in high-volatility stocks.</p>
@@ -337,52 +324,51 @@ How do anomaly thresholds impact model performance?
 <section id="practical-applications" class="title-slide slide level1 center">
 <h1>Practical Applications</h1>
 <div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Trading Strategies</strong><br>
-- ±7% threshold for high-conviction trades<br>
-- Position sizing based on SHAP values</p>
-<p><strong>Risk Management</strong><br>
-- ±3% threshold for stop-loss triggers<br>
-- Real-time monitoring of RSI-volume spikes</p>
-<p><strong>Portfolio Protection</strong><br>
-- Anomaly alerts for hedging decisions<br>
-- Volatility forecasting for option pricing</p>
+<div class="column" style="width:80%;">
+<p><strong>Trading Strategies</strong></p>
+<ul>
+<li>±7% threshold for high-conviction trades</li>
+<li>Position sizing based on SHAP values</li>
+</ul>
 </div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
 <p><img data-src="images/trading-dashboard.png" width="450"></p>
-<figcaption>Trading Dashboard Concept</figcaption>
-</figure>
-</div>
 </div></div>
-<aside class="notes">
-<p>The framework provides actionable insights for traders, risk managers, and portfolio constructors, with threshold selection depending on use case requirements.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
+</section>
+<section class="slide level2">
+
+<div class="columns">
+<div class="column" style="width:80%;">
+<p><strong>Risk Management</strong></p>
+<ul>
+<li>±3% threshold for stop-loss triggers</li>
+<li>Real-time monitoring of RSI-volume spikes</li>
+</ul>
+<p><strong>Portfolio Protection</strong></p>
+<ul>
+<li>Anomaly alerts for hedging decisions</li>
+<li>Volatility forecasting for option pricing</li>
+</ul>
+</div></div>
 </section>
 <section class="slide level2">
 
 </section></section>
+<section>
 <section id="conclusion-future-work" class="title-slide slide level1 center">
 <h1>Conclusion &amp; Future Work</h1>
-<p><strong>Key Contributions</strong><br>
-✅ Demonstrated predictive power of TA features for volatility anomalies<br>
+<p><strong>Key Contributions</strong> ✅ Demonstrated predictive power of TA features for volatility anomalies<br>
 ✅ Identified RSI-volume interaction as dominant predictor<br>
 ✅ Established optimal threshold combinations for different use cases</p>
-<p><strong>Limitations &amp; Next Steps</strong><br>
-- Develop precision-focused models to reduce false positives<br>
-- Incorporate alternative data sources (news, sentiment)<br>
-- Test dynamic thresholding approaches<br>
-- Expand to sector-wide anomaly detection</p>
+</section>
+<section class="slide level2">
+
+<p><strong>Limitations &amp; Next Steps</strong></p>
+<ul>
+<li><p>Develop precision-focused models to reduce false positives</p></li>
+<li><p>Incorporate alternative data sources (news, sentiment)</p></li>
+<li><p>Test dynamic thresholding approaches</p></li>
+<li><p>Expand to sector-wide anomaly detection</p></li>
+</ul>
 <center>
 <img src="images/future-work.png" width="500px">
 </center>
@@ -399,13 +385,12 @@ How do anomaly thresholds impact model performance?
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<p>```</p>
 
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="images/stock-market.png" class="slide-logo"></p>
+<p><img src="images/favicon.png" class="slide-logo"></p>
 <div class="footer footer-default">
 <p>INFO 523 Final Project | Annabelle Zhu</p>
 </div>

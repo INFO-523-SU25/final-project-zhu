@@ -263,6 +263,6 @@
     "href": "presentation.html#athub-603881.sh-case-study",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "AtHub (603881.SH) Case Study",
-    "text": "AtHub (603881.SH) Case Study\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n- Binary classification of next-day anomalies\n- 30+ engineered technical features\n- Interpretable ML with SHAP analysis\n\n\n\n\nShanghai Stock Exchange\n\n\n\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
+    "text": "AtHub (603881.SH) Case Study\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n\nBinary classification of next-day anomalies\n30+ engineered technical features\nInterpretable ML with SHAP analysis\n\n\n\n\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
   }
 ]
