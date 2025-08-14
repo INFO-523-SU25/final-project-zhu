@@ -10,7 +10,7 @@ This project explores the predictive modeling of short-term volatility anomalies
 
 We define anomalies as:
 
-- **Price spikes or crashes**: Daily returns exceeding $\pm$5%.
+- **Price spikes or crashes**: Daily returns exceeding $\pm$ 5%.
 
 - **Volume surges**: Daily trading volume exceeding 2× the 30-day moving average.
 
