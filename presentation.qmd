@@ -16,6 +16,7 @@ format:
     footer: "INFO 523 Final Project | Annabelle Zhu"
     transition: fade
     slide-number: true
+    autoSlide: 0
 editor: visual
 jupyter: python3
 execute:
@@ -56,10 +57,12 @@ penguins = sns.load_dataset('penguins').dropna()
 
 # Market Anomaly Forecasting
 
+![](images/shanghai-stock-exchange.jpeg){width="622"}
+
 ## AtHub (603881.SH) Case Study
 
 ::::: columns
-::: {.column width="60%"}
+:::
 **Project Focus**\
 Predicting abnormal volatility (±5% price or 2× volume) using technical indicators
 
@@ -72,9 +75,9 @@ Predicting abnormal volatility (±5% price or 2× volume) using technical indica
 -   Interpretable ML with SHAP analysis
 :::
 
-::: {.column width="40%"}
-![](images/shanghai-stock-exchange.jpeg){width="622"}
-:::
+<audio controls> <source src="audio/slide1.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
+
 :::::
 
 ::: notes
@@ -134,9 +137,7 @@ How do anomaly thresholds impact model performance?
 ![](images/technical-analysis.jfif){width="333"}
 :::
 :::::
-
-::: notes
-We address three core research questions about prediction horizons, feature significance, and threshold sensitivity for anomaly detection in high-volatility stocks.
+<audio controls> <source src="audio/slide2.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
 :::
 
 ------------------------------------------------------------------------
@@ -174,9 +175,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-::: notes
-Models achieve perfect recall across all horizons but with low precision (19%). TA features contain predictive signals but require refinement to reduce false positives.
-:::
+<audio controls> <source src="audio/slide3.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
 
 ------------------------------------------------------------------------
 
@@ -199,6 +198,8 @@ plt.ylabel('Feature', fontsize=12)
 plt.grid(axis='x', alpha=0.3)
 plt.show()
 ```
+
+<audio controls> <source src="audio/slide4.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
 
 ::: notes
 RSI-Volume interaction dominates predictions, aligning with financial theory that momentum + volume surges signal volatility. Model oversimplifies by relying primarily on one feature.
@@ -229,6 +230,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+<audio controls> <source src="audio/slide5.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
 ::: notes
 ±3% price change + 1.8× volume delivers best F1 (0.41) with 97% recall. Higher thresholds reduce false positives but miss important signals.
 :::
@@ -256,6 +259,8 @@ plt.grid(axis='y', alpha=0.3)
 plt.show()
 ```
 
+<audio controls> <source src="audio/slide6.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
 ::: notes
 All thresholds identify economically significant moves (\>5% returns). Stricter thresholds capture larger but rarer anomalies.
 :::
@@ -264,24 +269,21 @@ All thresholds identify economically significant moves (\>5% returns). Stricter 
 
 # Practical Applications
 
-::::: columns
-::: {.column width="80%"}
-**Trading Strategies**
+![](images/trading-dashboard.png){width="450px"}
+
+
+## Trading Strategies
 
 -   ±7% threshold for high-conviction trades
 -   Position sizing based on SHAP values
-:::
 
-::: {.column width="50%"}
-![](images/trading-dashboard.png){width="450px"}
-:::
-:::::
 
-------------------------------------------------------------------------
+![](images/trading-in-equities-markets_Featured-Image.png){width="450px"}
 
-:::: columns
-::: {.column width="80%"}
-**Risk Management**
+<audio controls> <source src="audio/slide7.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
+
+## Risk Management
 
 -   ±3% threshold for stop-loss triggers
 -   Real-time monitoring of RSI-volume spikes
@@ -290,16 +292,21 @@ All thresholds identify economically significant moves (\>5% returns). Stricter 
 
 -   Anomaly alerts for hedging decisions
 -   Volatility forecasting for option pricing
-:::
-::::
+
+
+<audio controls> <source src="audio/slide8.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
 
 ------------------------------------------------------------------------
 
 # Conclusion & Future Work
 
-**Key Contributions** ✅ Demonstrated predictive power of TA features for volatility anomalies\
+**Key Contributions**
+✅ Demonstrated predictive power of TA features for volatility anomalies\
 ✅ Identified RSI-volume interaction as dominant predictor\
 ✅ Established optimal threshold combinations for different use cases
+
+<audio controls> <source src="audio/slide9.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
 
 ------------------------------------------------------------------------
 
@@ -318,6 +325,9 @@ All thresholds identify economically significant moves (\>5% returns). Stricter 
 <img src="images/future-work.png" width="500px">
 </center>
 ```
+
+<audio controls> <source src="audio/slide10.mp3" type="audio/mpeg"> Your browser does not support the audio element. </audio>
+
 
 ::: notes
 This work establishes a foundation for interpretable anomaly detection in high-volatility stocks, with promising extensions to real-time trading systems.

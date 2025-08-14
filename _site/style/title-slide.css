@@ -1,0 +1,21 @@
+.my-title-slide h1 {
+  color: white !important;
+}
+
+.my-title-slide h2,
+.my-title-slide .subtitle,
+.my-title-slide p,
+.quarto-title-author-name
+.footer{
+  color: snow !important;
+}
+
+
+.reveal .footer,
+.reveal-footer {
+  color: rgba(245, 245, 245, 0.9) !important;
+}
+
+.p-2 {
+  padding: 20px;
+}

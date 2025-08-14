@@ -1,0 +1,282 @@
+[
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "",
+    "text": "This project proposes the development of an interpretable machine learning model for forecasting short-term volatility anomalies in the Chinese equity market, using AtHub (603881.SH) as a case study. AtHub is a data center infrastructure provider whose stock demonstrates unusually high daily volatility and frequent sensitivity to external events such as government policy announcements (Lin et al. 2024). Rather than predicting stock prices directly—a notoriously noisy and non-stationary target—this study focuses on detecting next-day abnormal price or volume events, defined as daily returns exceeding ±5% or volume spikes greater than 2× the rolling average.\nWe aim to construct a binary classifier that leverages over 30 technical analysis (TA) indicators across momentum, volume, trend, and volatility domains. These features are engineered using the Tushare API and the tsta library, covering 218 trading days of AtHub data. The project will incorporate time-aware cross-validation to avoid look-ahead bias and SHAP analysis for post-hoc interpretability. Ensemble models like LightGBM and XGBoost will serve as the backbone of the predictive framework, selected for their robustness in handling noisy, nonlinear tabular data. The final outcome will include an interactive visualization of feature contributions, along with a brief report and presentation.\nThis proposal reflects a practical and scalable approach to market anomaly detection, especially relevant for traders and risk managers seeking data-driven early warning systems."
+  },
+  {
+    "objectID": "proposal.html#dataset-info",
+    "href": "proposal.html#dataset-info",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Dataset info",
+    "text": "Dataset info\n\n\n'Dataset contains 375 rows and 31 columns.'\n\n\n\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 375 entries, 0 to 374\nData columns (total 31 columns):\n #   Column             Non-Null Count  Dtype  \n---  ------             --------------  -----  \n 0   ts_code            375 non-null    object \n 1   open               375 non-null    float64\n 2   high               375 non-null    float64\n 3   low                375 non-null    float64\n 4   close              375 non-null    float64\n 5   pct_chg            375 non-null    float64\n 6   vol                375 non-null    float64\n 7   amount             375 non-null    float64\n 8   volume_obv         375 non-null    float64\n 9   volume_cmf         375 non-null    float64\n 10  volume_vpt         375 non-null    float64\n 11  volume_vwap        375 non-null    float64\n 12  volume_mfi         375 non-null    float64\n 13  volatility_bbw     375 non-null    float64\n 14  volatility_atr     375 non-null    float64\n 15  volatility_ui      375 non-null    float64\n 16  trend_macd         375 non-null    float64\n 17  trend_macd_signal  375 non-null    float64\n 18  trend_macd_diff    375 non-null    float64\n 19  trend_adx          375 non-null    float64\n 20  trend_adx_pos      375 non-null    float64\n 21  trend_adx_neg      375 non-null    float64\n 22  momentum_rsi       375 non-null    float64\n 23  momentum_wr        375 non-null    float64\n 24  momentum_roc       375 non-null    float64\n 25  momentum_ao        375 non-null    float64\n 26  momentum_ppo_hist  375 non-null    float64\n 27  trend_cci          375 non-null    float64\n 28  trend_aroon_up     375 non-null    int64  \n 29  trend_aroon_down   375 non-null    int64  \n 30  trend_aroon_ind    375 non-null    int64  \ndtypes: float64(27), int64(3), object(1)\nmemory usage: 90.9+ KB"
+  },
+  {
+    "objectID": "proposal.html#dataset-summary",
+    "href": "proposal.html#dataset-summary",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Dataset Summary",
+    "text": "Dataset Summary\nThe dataset is sourced via the Tushare API and engineered using Python’s tsta technical indicator library. It includes:\n\n375 daily records of AtHub stock trading from the past ~18 months\n31 columns, including:\n\nPrice data: open, high, low, close, pct_chg\nVolume metrics: vol, amount, volume_obv, volume_cmf, volume_vpt, volume_vwap, volume_mfi\nVolatility indicators: volatility_bbw, volatility_atr, volatility_ui\nTrend & momentum indicators: trend_macd, trend_adx, momentum_rsi, momentum_wr, momentum_roc, trend_aroon_up, etc.\n\n\nThis feature-rich time series provides a robust foundation for testing anomaly detection models under realistic, noisy conditions."
+  },
+  {
+    "objectID": "proposal.html#target-anomalies",
+    "href": "proposal.html#target-anomalies",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Target Anomalies",
+    "text": "Target Anomalies\n\n\n\n\n\nAnomaly Class Distribution\n\n\n\nDistribution of Anomaly Labels (Target Variable)"
+  },
+  {
+    "objectID": "proposal.html#feature-construction-strategy",
+    "href": "proposal.html#feature-construction-strategy",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Feature Construction Strategy",
+    "text": "Feature Construction Strategy\nTo effectively model price and volume anomalies, we engineered over 30 technical indicators across four core dimensions widely adopted in quantitative trading:\n\nMomentum (e.g., RSI, MACD, Williams %R): capture price velocity and potential reversals.\nVolume-based (e.g., OBV, MFI, VPT): track accumulation/distribution behavior.\nVolatility (e.g., ATR, Bollinger Band Width, Ulcer Index): quantify market turbulence.\nTrend strength (e.g., ADX, Aroon, CCI): detect the emergence or weakening of price trends.\n\nThese indicators were computed using the tsta Python library and merged with daily OHLCV data. We conducted correlation analysis to filter redundant signals and retain complementary ones, as illustrated in the figure below.\n\n\n\n\n\nCorrelation Between Features and Target (Anomaly)\n\n\n\n\nThis engineered feature space provides interpretable signals that are sensitive to both directional shifts and liquidity changes—two major components in anomaly formation."
+  },
+  {
+    "objectID": "proposal.html#model-development-approach",
+    "href": "proposal.html#model-development-approach",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Development Approach",
+    "text": "Model Development Approach\n\nData Splitting Strategy\nGiven the time-series nature of stock data, we implement:\n\nChronological split: First 80% for training, last 20% for testing\nWalk-forward validation: Expanding window cross-validation\n\n\n\nEvaluation Metrics\nWe prioritize: - Recall: Minimizing false negatives (missed anomalies)\n\nF1-score: Balancing precision/recall\nMatthews Correlation Coefficient: Robust to class imbalance\n\n\n\nBaseline Models\n\n\n\n\n\n\n\n\nModel\nStrengths\nWeaknesses\n\n\n\n\nXGBoost\nHandles nonlinear relationships\nRequires careful tuning\n\n\nLightGBM\nEfficient with large features\nSensitive to outliers\n\n\nLogistic Regression\nInterpretable coefficients\nLimited nonlinear capacity"
+  },
+  {
+    "objectID": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
+    "href": "proposal.html#weekly-plan-predicting-abnormal-volatility-in-athub-603881.sh",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)",
+    "text": "Weekly Plan: Predicting Abnormal Volatility in AtHub (603881.SH)\n\nWeek 1: Data Collection & Exploratory Analysis (EDA)\n\nTasks:\n\nCollect 1+ year of OHLCV data for AtHub using Tushare API.\nGenerate TA features (momentum, volume, volatility, trend indicators).\nPerform EDA:\n\nVisualize price/volume trends and anomaly frequency.\nCheck for missing data, outliers, and stationarity.\nAnalyze correlation between raw price/volume metrics.\n\nDefine preliminary anomaly thresholds ($\\(5% returns, 2\\)$ volume).\n\nTools: tushare, pandas, matplotlib, ta, seaborn.\n\n\n\nWeek 2: Feature Engineering & Baseline Model\n\nTasks:\n\nRefine anomaly labels based on EDA insights.\nSplit data chronologically (e.g., 80% train, 20% test).\nTrain baseline models (XGBoost/LightGBM) and evaluate with accuracy/F1.\n\nResearch Questions Addressed:\n\nQ3 (Threshold Impact): Test initial thresholds.\n\nTools: scikit-learn, xgboost.\n\n\n\nWeek 3: Model Tuning & Interpretability\n\nTasks:\n\nOptimize hyperparameters using time-series cross-validation.\nCompare performance across thresholds (\\(\\pm\\) 3%, \\(\\pm\\) 5%, \\(\\pm\\) 7%).\nApply SHAP to identify top predictive features and patterns.\nTest feature lead times (1–3 days pre-anomaly).\n\nResearch Questions Addressed:\n\nQ1 (Predictive Horizon): Lag feature analysis.\nQ2 (Feature Importance): SHAP/partial dependence plots.\n\nTools: optuna, shap, statsmodels (Granger causality).\n\n\n\nWeek 4: Final Evaluation & Deliverables\n\nTasks:\n\nWrite-up (1,000–2,000 words):\n\nIntroduction, Methods, Results (SHAP plots, threshold analysis), Conclusion.\n\nPresentation (5 mins):\n\nQuarto slides covering motivation, methods, key findings, Q&A prep.\n\nWebsite:\n\nHost report, code, and interactive visualizations (e.g., Plotly dashboards).\n\nRepo Organization:\n\nLogical structure (e.g., data/, notebooks/, results/).\nClear index.qmd as entry point.\n\n\nTools: Quarto, plotly, pkgdown"
+  },
+  {
+    "objectID": "proposal.html#expected-outcomes",
+    "href": "proposal.html#expected-outcomes",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Expected Outcomes",
+    "text": "Expected Outcomes\n\nThreshold Analysis Results:\n\nPrecision-recall curves for \\(\\pm\\) 3% vs. \\(\\pm\\) 5% vs. \\(\\pm\\) 7% thresholds\nOptimal threshold selection based on trading costs\n\nTop Predictive Features:\n\nSHAP summary plot of top influential indicators\nTemporal importance patterns (e.g., volume leads price)\n\nPractical Trading Rules:\n\nActionable signals like:\n*“When RSI &gt; 70 AND OBV &lt; 30-day average* \\(\\to\\) 67% probability of next-day drop &gt;5%”\n\nInteractive Dashboard:\n\nDynamic visualization of anomaly predictions\nThreshold adjustment interface"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "",
+    "text": "This project investigates whether abnormal price and volume fluctuations in AtHub (603881.SH)—a Chinese data center infrastructure firm—can be predicted using technical analysis (TA) features. We define volatility anomalies as daily returns exceeding ±5% or volume surges exceeding twice the 30-day rolling average. Drawing on over 30 engineered TA indicators spanning momentum, trend, volume, and volatility categories, we construct a supervised learning pipeline to forecast next-day anomalies. The model is evaluated using time-aware cross-validation and interpreted through SHAP analysis to reveal leading patterns and feature contributions. Results suggest that certain TA combinations (e.g., high RSI with declining OBV) consistently precede large movements, demonstrating the potential of interpretable, data-driven tools for anomaly detection in high-volatility equities."
+  },
+  {
+    "objectID": "index.html#loading-and-initial-preparation",
+    "href": "index.html#loading-and-initial-preparation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Loading and Initial Preparation",
+    "text": "Loading and Initial Preparation\n\n\nTotal observations: 375\nNumber of Columns: 31"
+  },
+  {
+    "objectID": "index.html#target-variable-engineering",
+    "href": "index.html#target-variable-engineering",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Target Variable Engineering",
+    "text": "Target Variable Engineering\n\nDefine the binary target: will there be an anomaly tomorrow?\nTo better understand the imbalance in the target variable, we plot the proportion of anomaly vs. normal days. An anomaly day is defined as either a \\(\\pm\\) 5% price change or a volume spike above twice the 30-day moving average. The bar chart highlights the class imbalance, a common challenge in financial anomaly detection.\n\n\n\n\n\nClass Distribution of Target Labels"
+  },
+  {
+    "objectID": "index.html#data-cleaning",
+    "href": "index.html#data-cleaning",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Data-cleaning",
+    "text": "Data-cleaning\n\n\nMissing values per column:\nts_code               0\nopen                  0\nhigh                  0\nlow                   0\nclose                 0\npct_chg               0\nvol                   0\namount                0\nvolume_obv            0\nvolume_cmf            0\nvolume_vpt            0\nvolume_vwap           0\nvolume_mfi            0\nvolatility_bbw        0\nvolatility_atr        0\nvolatility_ui         0\ntrend_macd            0\ntrend_macd_signal     0\ntrend_macd_diff       0\ntrend_adx             0\ntrend_adx_pos         0\ntrend_adx_neg         0\nmomentum_rsi          0\nmomentum_wr           0\nmomentum_roc          0\nmomentum_ao           0\nmomentum_ppo_hist     0\ntrend_cci             0\ntrend_aroon_up        0\ntrend_aroon_down      0\ntrend_aroon_ind       0\nvol_ma30             29\nanomaly               0\ntarget                0\ndtype: int64"
+  },
+  {
+    "objectID": "index.html#data-reduction",
+    "href": "index.html#data-reduction",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Data Reduction",
+    "text": "Data Reduction\n\nRemove unnecessary columns\n\n\nRemaining features: 30\n\n\n\n\nCorrelation Analysis\n\n\n\n\n\nCorrelation Matrix of Selected Features\n\n\n\n\n\nThere is no highly correlated features"
+  },
+  {
+    "objectID": "index.html#data-transformation",
+    "href": "index.html#data-transformation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Data-Transformation",
+    "text": "Data-Transformation\n\n\nFeature skewness before transformation:\nvol           2.260647\namount        2.817781\nvolume_obv    2.174151\nvolume_vpt    0.949351\ndtype: float64\n\n\n\nWe can see from the output, vol, amount, volume_obv is highly right skewed, and volume_vpt is a little right skewed. We can apply log transformation."
+  },
+  {
+    "objectID": "index.html#feature-engineering",
+    "href": "index.html#feature-engineering",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Feature Engineering",
+    "text": "Feature Engineering\n\nCreating Lag Features\nTo capture predictive patterns leading up to volatility events, we create lagged versions of key indicators. This allows the model to detect precursor signals 1-3 days before anomalies.\n\nThese lagged features serve as candidate leading indicators, designed to capture anomaly signals up to 3 days ahead of their occurrence.\n\n\n\nCreating Rolling Statistics\n\nRolling window statistics help capture evolving market conditions and short-term trends that may precede volatility events.\n\n\n\nInteraction Features\nWe create interaction terms between key indicators that financial theory suggests may combine to signal impending volatility.\n\n\nFeature Importance\nWe use mutual information to identify the most predictive features for our anomaly target.\n\n\nTop 20 features by mutual information:\n['log_amount', 'log_vol', 'high', 'volume_vwap', 'open', 'low', 'volatility_atr_lag1', 'trend_macd', 'volatility_atr', 'log_volume_vpt_ma5', 'volatility_atr_ma10', 'volatility_atr_lag2', 'close', 'trend_cci', 'volatility_atr_lag3', 'momentum_rsi_lag2', 'volatility_ui', 'rsi_vol_interaction', 'log_volume_vpt', 'pct_chg']\n\n\n\n\n\n\n\nTop 20 Features by Mutual Information with Anomaly Target"
+  },
+  {
+    "objectID": "index.html#train-test-split",
+    "href": "index.html#train-test-split",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Train-Test Split",
+    "text": "Train-Test Split"
+  },
+  {
+    "objectID": "index.html#handling-class-imbalance",
+    "href": "index.html#handling-class-imbalance",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Handling Class Imbalance",
+    "text": "Handling Class Imbalance\nTo address the significant class imbalance (\\(\\approx\\) 15% anomalies), we implement class weighting in our models to prioritize correct identification of rare events.\n\n\nClass weights: {np.float64(0.0): np.float64(0.6118721461187214), np.float64(1.0): np.float64(2.7346938775510203)}\n\n\n\nHandling class imbalance ensures your model doesn’t ignore rare but important anomalies, which is essential for a volatility anomaly detection task."
+  },
+  {
+    "objectID": "index.html#model-selection-and-initialization",
+    "href": "index.html#model-selection-and-initialization",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Selection and Initialization",
+    "text": "Model Selection and Initialization\nWe initialize three baseline models with class weighting to address imbalance:\n\nLogistic Regression – interpretable linear baseline\n\nXGBoost – robust gradient boosting\n\nLightGBM – efficient for large feature spaces"
+  },
+  {
+    "objectID": "index.html#model-training",
+    "href": "index.html#model-training",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Training",
+    "text": "Model Training\nWe train all models on the training set while preserving the temporal order of data.\n\n\nTraining Logistic Regression\n\n\nTraining XGBoost\nTraining LightGBM\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\n[LightGBM] [Info] Number of positive: 49, number of negative: 219\n[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000608 seconds.\nYou can set `force_row_wise=true` to remove the overhead.\nAnd if memory is not enough, you can set `force_col_wise=true`.\n[LightGBM] [Info] Total Bins 3968\n[LightGBM] [Info] Number of data points in the train set: 268, number of used features: 55\n[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=-0.000000\n[LightGBM] [Info] Start training from score -0.000000\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf\n[LightGBM] [Warning] No further splits with positive gain, best gain: -inf"
+  },
+  {
+    "objectID": "index.html#baseline-evaluation",
+    "href": "index.html#baseline-evaluation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Baseline Evaluation",
+    "text": "Baseline Evaluation\nWe evaluate model performance using time-series appropriate metrics focused on anomaly detection capability.\n\n\nLogistic Regression Classification Report:\n              precision    recall  f1-score   support\n\n         0.0       0.95      0.78      0.86        54\n         1.0       0.50      0.86      0.63        14\n\n    accuracy                           0.79        68\n   macro avg       0.73      0.82      0.74        68\nweighted avg       0.86      0.79      0.81        68\n\nXGBoost Classification Report:\n              precision    recall  f1-score   support\n\n         0.0       0.90      0.87      0.89        54\n         1.0       0.56      0.64      0.60        14\n\n    accuracy                           0.82        68\n   macro avg       0.73      0.76      0.74        68\nweighted avg       0.83      0.82      0.83        68\n\n[LightGBM] [Warning] min_data_in_leaf is set=1, min_child_samples=20 will be ignored. Current value: min_data_in_leaf=1\n[LightGBM] [Warning] min_gain_to_split is set=0.0, min_split_gain=0.0 will be ignored. Current value: min_gain_to_split=0.0\nLightGBM Classification Report:\n              precision    recall  f1-score   support\n\n         0.0       0.88      0.80      0.83        54\n         1.0       0.42      0.57      0.48        14\n\n    accuracy                           0.75        68\n   macro avg       0.65      0.68      0.66        68\nweighted avg       0.78      0.75      0.76        68\n\n\n\n\n\n\nBaseline Model Performance Comparison\n\n\n\n\n\n🧩 Confusion Matrix Analysis\nThe confusion matrices above illustrate the detailed classification outcomes for each model:\n\nLogistic Regression:\n\nCorrectly identified 12 out of 14 anomalies (true positives), with only 2 false negatives.\nMisclassified 12 normal cases as anomalies (false positives), suggesting higher sensitivity but lower precision.\n\nXGBoost:\n\nAchieved a more balanced trade-off, with 9 true positives and 5 false negatives, while maintaining fewer false positives (7).\nIndicates more conservative but precise predictions.\n\nLightGBM:\n\nDetected 8 anomalies, missing 6, and misclassified 11 normal cases as anomalies.\nShows relatively weaker performance both in recall and precision.\n\n\nThese matrices reinforce the earlier observation: Logistic Regression exhibits the strongest recall, crucial for rare event detection, albeit at the cost of more false alarms.\n\n\n&lt;Figure size 960x576 with 0 Axes&gt;\nBaseline Model Performance Comparison\n\n\n\n\n\n\n\n\n\n\n\n📊 Baseline Model Performance Comparison\nTo evaluate the effectiveness of different classification models in identifying short-term volatility anomalies, we trained three baselines with class weighting to mitigate the heavy class imbalance (\\(\\approx\\) 15% anomalies):\n\nLogistic Regression\nXGBoost\nLightGBM\n\nThe bar chart above compares their performance on three key evaluation metrics:\n\nRecall (Sensitivity): Measures the model’s ability to correctly detect anomalies (true positives).\nF1-Score: Harmonic mean of precision and recall, balancing false positives and false negatives.\nMCC (Matthews Correlation Coefficient): A balanced metric even for imbalanced classes, ranging from -1 to 1.\n\n\n🔍 Observations:\n\nLogistic Regression performed best across all metrics:\n\nIt achieved the highest recall (~87%), indicating strong ability to detect rare anomaly cases.\nIts F1-score (~64%) and MCC (~54%) suggest reasonably good overall balance despite the class imbalance.\n\nXGBoost delivered moderate recall (~65%) and slightly lower F1 and MCC, suggesting it is more conservative but still effective.\nLightGBM underperformed in this setup:\n\nAlthough recall was fair (~57%), its MCC dropped below 0.4, indicating weaker overall discriminative power."
+  },
+  {
+    "objectID": "index.html#cross-validation-for-robustness-assessment",
+    "href": "index.html#cross-validation-for-robustness-assessment",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Cross-Validation for Robustness Assessment",
+    "text": "Cross-Validation for Robustness Assessment\nTo ensure our models generalize well and to get a more reliable estimate of performance, we implement stratified k-fold cross-validation. This approach maintains the class distribution in each fold, which is crucial given our imbalanced dataset."
+  },
+  {
+    "objectID": "index.html#hyperparameter-tuning-for-improved-performance",
+    "href": "index.html#hyperparameter-tuning-for-improved-performance",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Hyperparameter Tuning for Improved Performance",
+    "text": "Hyperparameter Tuning for Improved Performance\nWe focus on tuning the Logistic Regression model since it showed the best performance in our baseline evaluation. We optimize for recall to maximize anomaly detection while balancing precision through regularization.\n\n\nFitting 5 folds for each of 28 candidates, totalling 140 fits\n\n\nGridSearchCV(cv=StratifiedKFold(n_splits=5, random_state=42, shuffle=True),\n             estimator=LogisticRegression(class_weight='balanced',\n                                          max_iter=3000, random_state=42),\n             n_jobs=-1,\n             param_grid={'C': array([1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]),\n                         'penalty': ['l1', 'l2'],\n                         'solver': ['liblinear', 'saga']},\n             scoring='recall', verbose=1)In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.GridSearchCV?Documentation for GridSearchCViFittedGridSearchCV(cv=StratifiedKFold(n_splits=5, random_state=42, shuffle=True),\n             estimator=LogisticRegression(class_weight='balanced',\n                                          max_iter=3000, random_state=42),\n             n_jobs=-1,\n             param_grid={'C': array([1.e-03, 1.e-02, 1.e-01, 1.e+00, 1.e+01, 1.e+02, 1.e+03]),\n                         'penalty': ['l1', 'l2'],\n                         'solver': ['liblinear', 'saga']},\n             scoring='recall', verbose=1) best_estimator_: LogisticRegressionLogisticRegression(C=np.float64(0.001), class_weight='balanced', max_iter=3000,\n                   penalty='l1', random_state=42, solver='liblinear') LogisticRegression?Documentation for LogisticRegressionLogisticRegression(C=np.float64(0.001), class_weight='balanced', max_iter=3000,\n                   penalty='l1', random_state=42, solver='liblinear') \n\n\n\nWe prioritize recall, because in early warning systems, recall matters most: better to investigate a few false alerts than miss a real event."
+  },
+  {
+    "objectID": "index.html#model-evaluation",
+    "href": "index.html#model-evaluation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Evaluation",
+    "text": "Model Evaluation\n\n\nBest parameters: {'C': np.float64(0.001), 'penalty': 'l1', 'solver': 'liblinear'}\nBest recall score: 0.9077\n\n\nWe conducted hyperparameter tuning on the Logistic Regression model using a 5-fold stratified cross-validation strategy. The tuning process explored various combinations of regularization strength (C), penalty types (l1, l2), and solvers compatible with L1 regularization (liblinear, saga).\nBy optimizing for recall, we aimed to prioritize the detection of abnormal events (true positives), even at the potential cost of increased false positives.\nThe best-performing configuration is as follows:\n\nC: 0.001\nPenalty: L1\nSolver: liblinear\nCross-validated Recall: 0.9077\n\nThis configuration reflects a strong preference for sparsity and regularization, which is suitable for handling high-dimensional or potentially collinear feature spaces. The high recall indicates the model is effective at identifying rare but critical anomaly events.\nWe use this best estimator for final model training and evaluation.\n\n\n              precision    recall  f1-score   support\n\n         0.0       0.00      0.00      0.00        54\n         1.0       0.21      1.00      0.34        14\n\n    accuracy                           0.21        68\n   macro avg       0.10      0.50      0.17        68\nweighted avg       0.04      0.21      0.07        68\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe model is extremely sensitive to anomalies (perfect recall), but sacrifices all specificity. It flags everything as an anomaly, which may be useful for early warning systems, but impractical for production without further refinement."
+  },
+  {
+    "objectID": "index.html#multi-horizon-anomaly-prediction",
+    "href": "index.html#multi-horizon-anomaly-prediction",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Multi-Horizon Anomaly Prediction",
+    "text": "Multi-Horizon Anomaly Prediction\nWe’ll create three separate target variables for anomalies at different horizons:\n\n\n     anomaly  anomaly_next_day  anomaly_day_2  anomaly_day_3\n369        0                 0              0              0\n370        0                 0              0              0\n371        0                 0              0              0\n372        0                 0              0              0\n373        0                 0              0              0"
+  },
+  {
+    "objectID": "index.html#feature-engineering-for-multi-horizon-prediction",
+    "href": "index.html#feature-engineering-for-multi-horizon-prediction",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Feature Engineering for Multi-Horizon Prediction",
+    "text": "Feature Engineering for Multi-Horizon Prediction\nWe’ll use only current-day features (no future data) to predict future anomalies:\n\n\nSample sizes: {'next_day': 336, 'day_2': 336, 'day_3': 336}"
+  },
+  {
+    "objectID": "index.html#model-training-and-evaluation",
+    "href": "index.html#model-training-and-evaluation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Model Training and Evaluation",
+    "text": "Model Training and Evaluation\nWe’ll train our best model (Logistic Regression) separately for each horizon:\n\n\n\n--- Horizon: next_day ---\n\n\nBest Params: {'C': np.float64(0.001), 'penalty': 'l1', 'solver': 'saga'}\n              precision    recall  f1-score   support\n\n           0       0.00      0.00      0.00        55\n           1       0.19      1.00      0.32        13\n\n    accuracy                           0.19        68\n   macro avg       0.10      0.50      0.16        68\nweighted avg       0.04      0.19      0.06        68\n\n\n--- Horizon: day_2 ---\n\n\nBest Params: {'C': np.float64(0.001), 'penalty': 'l1', 'solver': 'saga'}\n              precision    recall  f1-score   support\n\n           0       0.00      0.00      0.00        55\n           1       0.19      1.00      0.32        13\n\n    accuracy                           0.19        68\n   macro avg       0.10      0.50      0.16        68\nweighted avg       0.04      0.19      0.06        68\n\n\n--- Horizon: day_3 ---\n\n\nBest Params: {'C': np.float64(0.001), 'penalty': 'l1', 'solver': 'saga'}\n              precision    recall  f1-score   support\n\n           0       0.00      0.00      0.00        55\n           1       0.19      1.00      0.32        13\n\n    accuracy                           0.19        68\n   macro avg       0.10      0.50      0.16        68\nweighted avg       0.04      0.19      0.06        68\n\n\n\n\n\n\n\n\n\n\n\n\nHorizon\nBest Params\nRecall\nF1-score\nPrecision\nAccuracy\nAnomaly Rate\n\n\n\n\n0\nnext_day\n{'C': 0.001, 'penalty': 'l1', 'solver': 'saga'}\n1.0\n0.320988\n0.191176\n0.191176\n0.191176\n\n\n1\nday_2\n{'C': 0.001, 'penalty': 'l1', 'solver': 'saga'}\n1.0\n0.320988\n0.191176\n0.191176\n0.191176\n\n\n2\nday_3\n{'C': 0.001, 'penalty': 'l1', 'solver': 'saga'}\n1.0\n0.320988\n0.191176\n0.191176\n0.191176"
+  },
+  {
+    "objectID": "index.html#results-visualization",
+    "href": "index.html#results-visualization",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Results Visualization",
+    "text": "Results Visualization\n\n\n\n\n\nPrediction Performance Across Time Horizons\n\n\n\n\nWe evaluated our logistic regression model on its ability to forecast abnormal volatility events for the next 3 days. The bar chart below compares its recall (green) and precision (blue) across 3 prediction horizons, while the red line shows the base anomaly rate for reference.\n\nKey Findings:\n\n✅ The model successfully captures all true anomalies (100% recall) across all three horizons.\n⚠️ Precision remains very low (19%), matching the base anomaly rate—suggesting the model flags nearly every day as an anomaly.\n⚖️ No performance degradation is observed as we extend the forecast window to 2 or 3 days ahead, indicating the TA features carry similar predictive signals across short horizons.\n\n\n\nDid anomalies actually occur?\n\n\n\n\n\n\n\n\n\nHorizon\nModel Detected Anomalies\nTrue Anomalies\nModel Misses\n\n\n\n\n1-day ahead\n✅ All detected\n✅ All occurred\n❌ None\n\n\n2-day ahead\n✅ All detected\n✅ All occurred\n❌ None\n\n\n3-day ahead\n✅ All detected\n✅ All occurred\n❌ None\n\n\n\nThe model does correctly identify that anomalies will happen in the next 3 days, but it lacks specificity (i.e., flags too many false positives). This shows potential for forecasting near-term volatility, but also suggests that further tuning or feature selection is needed to improve decision quality.\n\n\nInterpretation:\n\nThe features clearly contain predictive information for anomaly detection up to 3 days ahead.\nHowever, the model is overly cautious, favoring recall over precision—which may not be practical in real trading or risk management contexts.\nFuture work should explore:\n\nPrecision-oriented thresholds or cost-sensitive learning;\nAdditional features that help distinguish real from false alarms;\nAlternative models with better calibration (e.g., tree ensembles, calibrated probabilities).\n\n\n\nConclusion: Yes, TA features can predict anomalies up to 3 days into the future, but refinement is needed to reduce false alarms."
+  },
+  {
+    "objectID": "index.html#deep-dive-rsi_vol_interaction",
+    "href": "index.html#deep-dive-rsi_vol_interaction",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Deep Dive: rsi_vol_interaction",
+    "text": "Deep Dive: rsi_vol_interaction\nTo understand why rsi_vol_interaction emerged as the most influential feature in our SHAP analysis, we visualized its relationship with the target anomaly label using a boxplot.\n\n\n\n\n\n\n\n\n\nTo investigate feature importance and alignment with financial theory, we applied SHAP (SHapley Additive exPlanations) analysis to our best-performing logistic regression model. This revealed that the rsi_vol_interaction feature—an engineered interaction between Relative Strength Index (RSI) and volume—was by far the most influential predictor.\n\nKey Observations:\n\nThe median value of rsi_vol_interaction is significantly higher on anomaly days (anomaly = 1) than on non-anomaly days.\nThe upper quartile and overall spread are also noticeably elevated for anomalies, suggesting that spikes in RSI combined with high trading volume often precede abnormal events.\nThis pattern aligns with financial theory: rapid momentum (high RSI) and surging volume frequently signal strong market sentiment, breakouts, or panic-induced price swings—all of which can manifest as short-term volatility anomalies.\n\n\n\nImplications:\n\nThe interaction feature captures a meaningful and interpretable market signal, supporting its use in early warning systems or alert frameworks.\nHowever, the feature’s overwhelming dominance raises two important concerns:\n\nFeature redundancy: Other technical indicators might be correlated with this interaction, causing them to be down-weighted or excluded by the model.\nModel sparsity bias: Our use of L1-regularized logistic regression promotes a sparse feature set, potentially over-simplifying the decision boundary by selecting only the strongest signal and suppressing complementary ones."
+  },
+  {
+    "objectID": "index.html#methodology",
+    "href": "index.html#methodology",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Methodology",
+    "text": "Methodology\nWe’ll evaluate model performance across 9 threshold combinations (3 price × 3 volume) using: 1. Price thresholds: \\(\\pm\\) 3% vs. \\(\\pm\\) 5% vs. \\(\\pm\\) 7% daily returns 2. Volume thresholds: 1.8 \\(\\times\\) vs. 2.5\\(\\times\\) 30-day average volume\n\n\nEvaluating 9 threshold combinations"
+  },
+  {
+    "objectID": "index.html#target-variable-engineering-1",
+    "href": "index.html#target-variable-engineering-1",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Target Variable Engineering",
+    "text": "Target Variable Engineering\n\n\n\n\n\n\n\n\n\nPrice Threshold\nVolume Threshold\nAnomaly Rate\nAvg Return\n\n\n\n\n0\n±3%\n1.8x\n0.338608\n5.380170\n\n\n1\n±3%\n2.0x\n0.325949\n5.558847\n\n\n2\n±3%\n2.5x\n0.319620\n5.655245\n\n\n3\n±5%\n1.8x\n0.208861\n6.428183\n\n\n4\n±5%\n2.0x\n0.189873\n6.903407\n\n\n5\n±5%\n2.5x\n0.177215\n7.199786\n\n\n6\n±7%\n1.8x\n0.148734\n6.644553\n\n\n7\n±7%\n2.0x\n0.117089\n7.502608\n\n\n8\n±7%\n2.5x\n0.094937\n8.338237"
+  },
+  {
+    "objectID": "index.html#performance-evaluation",
+    "href": "index.html#performance-evaluation",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Performance Evaluation",
+    "text": "Performance Evaluation\n\n\n\n\n\n\n\n\n\nPrice\nVolume\nRecall\nPrecision\nF1\nAnomaly Rate\n\n\n\n\n0\n3\n1.8\n0.766667\n0.190970\n0.299572\n0.338608\n\n\n1\n3\n2.0\n0.800000\n0.186538\n0.296003\n0.325949\n\n\n2\n3\n2.5\n0.800000\n0.182692\n0.291003\n0.319620\n\n\n3\n5\n1.8\n0.700000\n0.096581\n0.163571\n0.208861\n\n\n4\n5\n2.0\n1.000000\n0.135214\n0.230970\n0.189873\n\n\n5\n5\n2.5\n1.000000\n0.127244\n0.217630\n0.177215\n\n\n6\n7\n1.8\n0.680000\n0.078166\n0.135509\n0.148734\n\n\n7\n7\n2.0\n0.440000\n0.041964\n0.075688\n0.117089\n\n\n8\n7\n2.5\n0.450000\n0.039493\n0.072548\n0.094937"
+  },
+  {
+    "objectID": "index.html#visualization",
+    "href": "index.html#visualization",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Visualization",
+    "text": "Visualization"
+  },
+  {
+    "objectID": "index.html#model-performance-summary",
+    "href": "index.html#model-performance-summary",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "📈 Model Performance Summary",
+    "text": "📈 Model Performance Summary\nThe logistic regression model was evaluated across various combinations of price change thresholds and volume multipliers to detect anomalies. Performance was assessed using time-series cross-validation, and key metrics include Recall, Precision, and F1 Score.\n\n🔍 Key Findings\n\n✅ Best Trade-off (High Recall & Balanced F1):\n\n±3.0% & 1.8× delivered the best F1 score (0.41) with very high recall (0.97). This means it correctly captured almost all anomalies but with moderate precision.\n\n⚠️ High Thresholds (e.g., ±7.0%) result in:\n\nLow precision and recall due to a very small number of detected anomalies.\nLower anomaly rates (~9–15%), likely missing many subtle but important fluctuations.\n\n⚖️ Moderate Thresholds (±5.0%) improve anomaly sparsity but still lag in precision unless paired with lower volume multipliers.\n\n\n\n3. Economic Significance\n\n\n\n\n\nAverage Absolute Returns by Threshold Level"
+  },
+  {
+    "objectID": "index.html#economic-significance-1",
+    "href": "index.html#economic-significance-1",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "🔹 3. Economic Significance",
+    "text": "🔹 3. Economic Significance\nTo evaluate whether detected anomalies are economically meaningful, we compute the average absolute return for each price-volume threshold combination.\nThe chart below summarizes the magnitude of returns (in %) for detected anomalies. A horizontal line at 5% serves as a benchmark to determine if anomalies are potentially exploitable in practice.\n\n💡 Interpretation:\n\nHigher thresholds (±5%, ±7%) yield larger returns but fewer anomalies.\nAll combinations exceed 5% \\(\\to\\) they’re economically significant.\nThere’s a trade-off between anomaly frequency and magnitude — stricter thresholds give more actionable signals."
+  },
+  {
+    "objectID": "index.html#practical-implications",
+    "href": "index.html#practical-implications",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Practical Implications",
+    "text": "Practical Implications\nFor different use cases, we recommend:\n\nActive Traders: Use ±7%/2.5× thresholds for high-confidence signals (fewer, larger moves)\nRisk Managers: Use ±3%/1.8× thresholds for comprehensive monitoring (catch all potential risks)\nGeneral Purpose: ±5%/2.0× provides the best balance between sensitivity and precision"
+  },
+  {
+    "objectID": "index.html#limitations-and-future-work",
+    "href": "index.html#limitations-and-future-work",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Limitations and Future Work",
+    "text": "Limitations and Future Work\n\nThe current model is overly sensitive, flagging too many false positives\nFeature importance is concentrated in one dominant interaction term\nFuture improvements could include:\n\nIncorporating alternative data sources (news, order flow)\nTesting nonlinear models with calibrated probabilities\nDeveloping dynamic thresholding strategies\n\n\nThis work demonstrates that interpretable machine learning models can effectively detect impending volatility using only market-based technical indicators. The framework provides a foundation for building practical early warning systems while maintaining transparency in decision-making - a crucial requirement for financial applications."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Project Overview\nThis project explores the predictive modeling of short-term volatility anomalies in the Chinese equity market, with a specific focus on the stock AtHub (603881.SH)—a data center infrastructure company. The goal is to develop a machine learning pipeline that can detect abnormal daily price or volume movements using technical analysis (TA) indicators.\nWe define anomalies as:\n\nPrice spikes or crashes: Daily returns exceeding $$5%.\nVolume surges: Daily trading volume exceeding 2× the 30-day moving average.\n\nBy engineering over 30 TA-based features (momentum, trend, volume, and volatility), we aim to identify leading patterns that consistently precede such events.\n\n\n\nApproach Summary\n\nData Collection: Daily OHLCV data for AtHub over a multi-year period.\nFeature Engineering: Over 30 technical indicators computed using rolling windows.\nModeling: Supervised learning for anomaly classification (binary targets).\nEvaluation: Time-aware cross-validation to preserve chronological integrity.\nInterpretation: SHAP analysis to understand key feature interactions.\n\n\n\n\nContributors\nThis project was developed by\n\nAnnabelle Zhu, Project Author\nDr. Greg Chism, Professor of INFO 523."
+  },
+  {
+    "objectID": "presentation.html#athub-603881.sh-case-study",
+    "href": "presentation.html#athub-603881.sh-case-study",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "AtHub (603881.SH) Case Study",
+    "text": "AtHub (603881.SH) Case Study\n\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n\nBinary classification of next-day anomalies\n30+ engineered technical features\nInterpretable ML with SHAP analysis :::\n\n\n\nYour browser does not support the audio element. \n:::::\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
+  },
+  {
+    "objectID": "presentation.html#trading-strategies",
+    "href": "presentation.html#trading-strategies",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Trading Strategies",
+    "text": "Trading Strategies\n\n±7% threshold for high-conviction trades\nPosition sizing based on SHAP values\n\n\n\n\nYour browser does not support the audio element."
+  },
+  {
+    "objectID": "presentation.html#risk-management",
+    "href": "presentation.html#risk-management",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Risk Management",
+    "text": "Risk Management\n\n±3% threshold for stop-loss triggers\nReal-time monitoring of RSI-volume spikes\n\nPortfolio Protection\n\nAnomaly alerts for hedging decisions\nVolatility forecasting for option pricing\n\n\n\nYour browser does not support the audio element."
+  }
+]

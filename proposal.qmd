@@ -270,15 +270,16 @@ Here's a refined **weekly plan** in bullet-point format that incorporates EDA be
 # 📁 Repository Organization
 
 | Folder / File Name | Description |
-|------------------------------------|------------------------------------|
-| `.quarto/` | Internal Quarto system files; manages cache and config for rendering. Not manually edited. |
-| `_extra/` | Holds supplementary files or artifacts not directly part of deliverables. |
-| `_freeze/` | Stores frozen snapshots of document outputs to ensure reproducibility across builds. |
-| `_site/` | Output folder generated when the site is rendered; contains final HTML files. |
-| `data/` | Contains all datasets used in the project, both raw and processed. Includes README for data schema and source. |
-| `images/` | Stores all image assets, including plots and figures used in `.qmd` files. |
-| `style/` | Contains custom theming files (e.g., `customtheming.scss`) used to style the website. |
-| `index.qmd` | Landing page of the Quarto website; typically includes a high-level **project overview** or introduction. |
-| `about.qmd` | Additional project background or author info. Can serve as a **detailed project description**. |
-| `proposal.qmd` | Contains the research proposal, including motivation, methodology, timeline, and repo organization. |
+|--------------------|------------------------------------|
+| `.quarto/`         | Internal Quarto system files; manages cache and config for rendering. Not manually edited. |
+| `_extra/`          | Holds supplementary files or artifacts not directly part of deliverables. |
+| `_freeze/`         | Stores frozen snapshots of document outputs to ensure reproducibility across builds. |
+| `audio/`           | Contains voice recordings for presentation. Each file corresponds to a slide in the presentation. |
+| `_site/`           | Output folder generated when the site is rendered; contains final HTML files. |
+| `data/`            | Contains all datasets used in the project, both raw and processed. Includes README for data schema and source. |
+| `images/`          | Stores all image assets, including plots and figures used in `.qmd` files. |
+| `style/`           | Contains custom theming files (e.g., `customtheming.scss`) used to style the website. |
+| `index.qmd`        | Landing page of the Quarto website; typically includes a high-level **project overview** or introduction. |
+| `about.qmd`        | Additional project background or author info. Can serve as a **detailed project description**. |
+| `proposal.qmd`     | Contains the research proposal, including motivation, methodology, timeline, and repo organization. |
 | `presentation.qmd` | A Quarto-based presentation (slides) summarizing key findings from the final report. |
