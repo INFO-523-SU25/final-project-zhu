@@ -263,6 +263,20 @@
     "href": "presentation.html#athub-603881.sh-case-study",
     "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
     "section": "AtHub (603881.SH) Case Study",
-    "text": "AtHub (603881.SH) Case Study\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n\nBinary classification of next-day anomalies\n30+ engineered technical features\nInterpretable ML with SHAP analysis\n\n\n\n\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
+    "text": "AtHub (603881.SH) Case Study\n\n\n\nProject Focus\nPredicting abnormal volatility (±5% price or 2× volume) using technical indicators\nCore Approach\n\nBinary classification of next-day anomalies\n30+ engineered technical features\nInterpretable ML with SHAP analysis :::\n\n\n\nYour browser does not support the audio element. \n:::::\n\nThis project develops an early warning system for volatility anomalies in AtHub stock, a Chinese AI infrastructure company. We use market-based technical indicators to predict abnormal price and volume movements."
+  },
+  {
+    "objectID": "presentation.html#trading-strategies",
+    "href": "presentation.html#trading-strategies",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Trading Strategies",
+    "text": "Trading Strategies\n\n±7% threshold for high-conviction trades\nPosition sizing based on SHAP values\n\n\n\n\nYour browser does not support the audio element."
+  },
+  {
+    "objectID": "presentation.html#risk-management",
+    "href": "presentation.html#risk-management",
+    "title": "Forecasting Anomalies in AtHub’s Stock Behavior",
+    "section": "Risk Management",
+    "text": "Risk Management\n\n±3% threshold for stop-loss triggers\nReal-time monitoring of RSI-volume spikes\n\nPortfolio Protection\n\nAnomaly alerts for hedging decisions\nVolatility forecasting for option pricing\n\n\n\nYour browser does not support the audio element."
   }
 ]
